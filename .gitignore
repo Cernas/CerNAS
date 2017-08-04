@@ -1,0 +1,6 @@
+app/config/config.local.neon
+/vendor/
+/nbproject/private/
+app/config/config.rabbitmq.neon
+IOTGateway/config.ini
+appDownload/config.ini

@@ -1,0 +1,4 @@
+console:
+	commands:
+		- App\Console\RepositoryBackup
+		- App\Console\SystemBackup

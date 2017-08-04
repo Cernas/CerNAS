@@ -1,0 +1,66 @@
+{block title}Home{/block}
+
+{block content}
+
+<!-- Download styles -->
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/cernas/homepage.css">
+
+<div class="container">
+    <table class="header">
+        <thead>
+            <tr>
+                <th><h3>Home</h3></th>
+            </tr>
+        </thead>
+    </table>
+
+    <!-- Repository status -->
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>
+                    <div align="center"><span class="glyphicon glyphicon-hdd icon-hdd"></span></div>
+                </th>
+                <th class="text-name">Uložiště</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="width: 5%;"></td>
+                <td id="td-available" class="text-name">Volné místo: 10 GB z 500 GB</td>
+                <td style="width: 3%;"></td>
+            </tr>
+            <tr>
+                <td style="width: 5%;"></td>
+                <td>
+                    <div class="progress">
+                        <div id="progress" class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                    </div>
+                    <div id="div-info" class="text-info" align="right"></div>
+                </td>
+                <td style="width: 3%;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Services -->
+    <table class="table table-responsive">
+        <thead>
+            <tr class="text-name">
+                <th>
+                    <div align="center"><span class="glyphicon glyphicon-wrench icon-wrench"></span></div>
+                </th>
+                <th>Služby</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tr-services"></tbody>
+    </table>
+</div>
+
+<script src="{$basePath}/js/cernas/homepage.js"></script>
+<script src="{$basePath}/js/cernas/homepage_render.js"></script>
+
+{/block}

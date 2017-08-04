@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+
+        <title>{ifset title}{include title} | {/ifset}CerNAS</title>
+
+        <!-- Bootstrap styles -->
+        <link href="{$basePath}/css/bootstrap.min.css" rel="stylesheet">       
+        <!-- Layout styles -->
+        <link rel="stylesheet" href="{$basePath}/css/cernas/styles.css">
+        <!-- Toastr styles -->
+        <link href="{$basePath}/css/toastr.css" rel="stylesheet"/>
+    </head>
+
+    <body>
+        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+
+        <ul>
+            <li>
+                <a id="open-nav" href="#">
+                    <div class="icon"></div>
+                    <div class="icon"></div>
+                    <div class="icon"></div>
+                </a>
+            </li>
+            <a href="{$basePath}/homepage">
+                <img class="logo" src="{$basePath}/images/logo.svg">
+            </a>
+        </ul>
+
+        <div id="mySidenav" class="sidenav">
+            <a id="close-nav" href="#" class="closebtn">&times;</a>
+
+            <span class="menu-item">
+                <a href="{$basePath}/homepage"><span class="glyphicon glyphicon-home menu-item-icon"></span><span class="menu-item">Home</span></a>
+                <a href="{$basePath}/download"><span class="glyphicon glyphicon-download-alt menu-item-icon"></span><span class="menu-item">Stahování</span></a>
+                <a href="{$basePath}/backup"><span class="glyphicon glyphicon-refresh menu-item-icon"></span><span class="menu-item">Zálohování</span></a>
+                <a href="{$basePath}/music"><span class="glyphicon glyphicon-music menu-item-icon"></span><span class="menu-item">Hudba</span></a>
+                <a href="{$basePath}/control"><span class="glyphicon glyphicon-cog menu-item-icon"></span><span class="menu-item">Ovládání</span></a>
+            </span>
+
+            <div style="position: absolute; bottom: 30px;">
+                <a id="item-reboot" href="#"><span class="glyphicon glyphicon-repeat menu-item-icon" style=""></span><span class="menu-item">Restart</span></a>
+                <a id="item-shutdown" href="#"><span class="glyphicon glyphicon-off menu-item-icon"></span><span class="menu-item">Vypnout</span></a>
+            </div>
+        </div>
+
+        {block scripts}
+        <!-- jQuery -->
+        <script src="{$basePath}/js/jquery-3.2.1.min.js"></script>
+        <!-- Bootstrap -->                
+        <script src="{$basePath}/js/bootstrap.min.js"></script>     
+        <!-- Toastr -->
+        <script src="{$basePath}/js/toastr.js"></script>
+        <!-- Nav menu -->
+        <script src="{$basePath}/js/cernas/menu.js"></script>
+        {/block}
+
+        {include content}
+    </body>
+</html>

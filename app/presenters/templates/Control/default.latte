@@ -1,0 +1,81 @@
+{block title}Ovládání{/block}
+
+{block content}
+
+<!-- Download styles -->
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/cernas/control.css">
+
+<div class="container">
+    <table class="header">
+        <thead>
+            <tr>
+                <th><h3>Ovládání</h3></th>
+            </tr>
+        </thead>
+    </table>
+
+    <!-- Bedroom: room table -->
+    <table id="table-bedroom" class="table table-responsive room" style="margin-right: 20px;">
+        <thead>
+            <tr>
+                <th class="room-name">
+                    <span class="glyphicon glyphicon-bed" style="margin-right: 10px;"></span>Ložnice
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <!-- Bedroom: light table -->
+                    <table class="light" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="light-name" colspan="2">
+                                    <span class="glyphicon glyphicon-lamp" style="margin-right: 10px;"></span>Osvětlení
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tr-lightening-bedroom"></tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Livingroom: room table -->
+    <table id="table-livingroom" class="table table-responsive room" style="margin-right: 20px;">
+        <thead>
+            <tr>
+                <th class="room-name">
+                    <span class="glyphicon glyphicon-glass" style="margin-right: 10px;"></span>Obývací pokoj
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <!-- Livingroom: thermometer table -->
+                    <table class="temperature" style="width: 100%;">
+                        <thead id="th-sensor-livingroom">
+                            <tr>
+                                <th class="temperature-name" colspan="2">
+                                    <span class="glyphicon glyphicon-phone" style="margin-right: 10px;"></span>Teplota
+                                </th>
+                                <th id="sensor-livingroom"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tr-sensor-livingroom"></tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="{$basePath}/js/iro.min.js"></script>
+<script src="{$basePath}/js/socket.io-client/dist/socket.io.js"></script>
+<script src="{$basePath}/js/cernas/lightening.js"></script>
+<script src="{$basePath}/js/cernas/sensor.js"></script>
+<script src="{$basePath}/js/cernas/control_render.js"></script>
+
+{/block}

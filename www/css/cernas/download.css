@@ -1,0 +1,45 @@
+table tr td, table tr th {
+    background-color: rgba(0,0,0, 0.3) !important;
+    border-color: rgba(0,0,0, 0.0) !important;
+}
+
+.table-multiple {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table-single {
+    border: none;
+    border-spacing: 0 0px;
+}
+
+.progress-bar {
+    background-color: #54c688;
+    color: white;
+}
+
+.text-name {
+    color: white;
+    font-weight: bold;
+}
+
+.text-info {
+    color: grey;
+}
+
+.icon-waiting {
+    color: #54c688;
+}
+
+.icon-delete {
+    color: white;
+}
+
+.icon-add {
+    color: #54c688;
+}
+
+.icon-download {
+    color: #54c688;
+}

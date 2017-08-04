@@ -1,0 +1,86 @@
+{block title}Stahování{/block}
+
+{block content}
+
+<!-- Download styles -->
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/cernas/download.css">
+
+<div class="container">
+    <table class="header">
+        <thead>
+            <tr>
+                <th><h3>Stahování</h3></th>
+            </tr>
+        </thead>
+    </table>
+
+    <!-- Add download -->
+    <table class="table table-responsive table-single">
+        <tbody>
+            <tr>
+                <td style="width: 5%;">
+                    <a id="button-add" href="#">
+                        <div align="center"><span class="glyphicon glyphicon-plus icon-add"></span></div>
+                    </a>
+                </td>
+                <td style="width: 46%;">
+                    <div class="form-group">
+                        <label class="text-name" for="input-url">URL:</label>
+                        <input id="input-url" type="text" class="form-control input">
+                    </div>
+                </td>
+                <td style="width: 46%;">
+                    <div class="form-group">
+                        <label class="text-name" for="select-add">Cíl:</label>
+                        <select id="select-destination" class="form-control input">
+                            <option>Hudba</option>
+                            <option>Video</option>
+                            <option>Ostatní</option>
+                        </select>
+                    </div>
+                </td>
+                <td class="text-info" style="width: 3%;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Downloading -->
+    <table id="table-downloading" class="table table-responsive table-single" style="display: none;">
+        <tbody>
+            <tr>
+                <td style="width: 5%;">
+                    <div align="center"><span class="glyphicon glyphicon-download-alt icon-download"></span></div>
+                </td>
+                <td>
+                    <div id="td-filename" class="text-name"></div>
+                    <div id="td-started-at" class="text-info"></div>
+                    <div id="td-info" class="text-info"></div>
+                    <div class="progress">
+                        <div id="progress" class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0 %</div>
+                    </div>
+                </td>
+                <td style="width: 1%;">
+                    <a id="button-cancel" href="#">
+                        <span class="glyphicon glyphicon-remove icon-delete"></span>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Waiting -->
+    <table id="table-waiting" class="table table-responsive table-multiple">
+        <tbody id="tr-waiting"></tbody>
+    </table>
+
+    <!-- Downloaded -->
+    <table id="table-downloaded" class="table table-responsive table-multiple">
+        <tbody id="tr-downloaded"></tbody>
+    </table>
+</div>
+
+<script src="{$basePath}/js/socket.io-client/dist/socket.io.js"></script>
+<script src="{$basePath}/js/cernas/download.js"></script>
+<script src="{$basePath}/js/cernas/download_render.js"></script>
+
+{/block}

@@ -1,0 +1,89 @@
+{block title}Zálohování{/block}
+
+{block content}
+
+<!-- Download styles -->
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/cernas/backup.css">
+
+<!-- Backups -->
+<div class="container">
+    <table class="header">
+        <thead>
+            <tr>
+                <th><h3>Zálohování</h3></th>
+            </tr>
+        </thead>
+    </table>
+
+    <table class="table table-responsive">
+        <thead>
+            <tr class="text-name">
+                <th></th>
+                <th>Složka</th>
+                <th>Přírůstek</th>
+                <th>Velikost</th>
+                <th id="th-started-at">Spuštěno</th>
+                <th>Vytvořeno</th>
+                <th id="th-time">Čas</th>
+            </tr>
+        </thead>
+        <tbody id="tr-backups"></tbody>
+    </table>
+
+    <!-- HDD status -->
+    <table class="table table-responsive">
+        <tbody>
+            <tr>
+                <td style="width: 5%;">
+                    <div align="center"><span class="glyphicon glyphicon-hdd icon-hdd"></span></div>
+                </td>
+                <td id="td-available" class="text-name">Volné místo: 10 GB z 500 GB</td>
+                <td style="width: 3%;"></td>
+            </tr>
+            <tr>
+                <td style="width: 5%;"></td>
+                <td>
+                    <div class="progress">
+                        <div id="progress" class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                    </div>
+                    <div id="div-info" class="text-info" align="right"></div>
+                </td>
+                <td style="width: 3%;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-responsive">
+        <thead>
+            <tr class="text-name">
+                <th>
+                    <div align="center"><span class="glyphicon glyphicon-folder-open icon-folder"></span></div>
+                </th>
+                <th>Zálohované složky</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="width: 5%;">
+                    <a id="button-add" href="#">
+                        <div align="center"><span class="glyphicon glyphicon-plus icon-add"></span></div>
+                    </a>
+                </td>
+                <td style="width: 92%;">
+                    <div class="form-group">
+                        <label class="text-name" for="input-path">Cesta:</label>
+                        <input id="input-path" type="text" class="form-control input">
+                    </div>
+                </td>
+                <td style="width: 3%;"></td>
+            </tr>
+        </tbody>
+        <tbody id="tr-directories" style="border: none;"></tbody>
+    </table>
+</div>
+
+<script src="{$basePath}/js/cernas/backup.js"></script>
+<script src="{$basePath}/js/cernas/backup_render.js"></script>
+
+{/block}
