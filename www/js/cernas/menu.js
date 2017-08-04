@@ -1,8 +1,6 @@
 (function ($) {
     // Server IP address
-    //const IP_ADDRESS = '192.168.1.154';
-    //const IP_ADDRESS = '192.168.0.131';
-    const IP_ADDRESS = '10.0.0.5';
+    const IP_ADDRESS = '192.168.0.140';
 
     // Show menu button listener
     $('#open-nav').click(function () {

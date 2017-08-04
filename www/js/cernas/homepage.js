@@ -19,7 +19,7 @@
                     "<td style='width: 5%;'>" +
                     "<div align='center'><span class='glyphicon " + icon + "' style='color: " + icon_color + ";'></span></div>" +
                     "</td>" +
-                    "<td style='width: 90%;'>" + services[i].name + "</td>" +
+                    "<td style='width: 90%;'>" + services[i].label + "</td>" +
                     "<td>" +
                     "<a id='" + $(this).attr('id') + services[i].name + "' href='#'>" +
                     "<div align='center'><span class='glyphicon glyphicon-off icon-switch'></span></div>" +

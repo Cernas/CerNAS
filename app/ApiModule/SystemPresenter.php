@@ -33,15 +33,18 @@ class SystemPresenter extends BasePresenter {
 
         $data['services'] = [];
         array_push($data['services'], [
-            'name' => 'MiniDLNA',
+            'label' => 'MiniDLNA',
+            'name' => 'minidlna',
             'running' => $this->system->getServiceStatus('minidlna')
         ]);
         array_push($data['services'], [
-            'name' => 'Samba',
+            'label' => 'Samba',
+            'name' => 'smbd',
             'running' => $this->system->getServiceStatus('smbd')
         ]);
         array_push($data['services'], [
-            'name' => 'Supervisor',
+            'label' => 'Supervisor',
+            'name' => 'supervisor',
             'running' => $this->system->getServiceStatus('supervisor')
         ]);
 
@@ -50,7 +53,8 @@ class SystemPresenter extends BasePresenter {
             $dwnlStatus = true;
         }
         array_push($data['services'], [
-            'name' => 'Download',
+            'label' => 'Download',
+            'name' => 'download',
             'running' => $dwnlStatus
         ]);
 
@@ -59,16 +63,18 @@ class SystemPresenter extends BasePresenter {
             $iotStatus = true;
         }
         array_push($data['services'], [
-            'name' => 'IOT Gateway',
+            'label' => 'IOT Gateway',
+            'name' => 'iotgateway',
             'running' => $iotStatus
         ]);
-        
+
         $bleStatus = false;
         if (shell_exec('ps ax | grep -v grep | grep -v grep | grep node\ /var/www/IOTGateway/BLEGateway.js')) {
             $bleStatus = true;
         }
         array_push($data['services'], [
-            'name' => 'BLE Gateway',
+            'label' => 'BLE Gateway',
+            'name' => 'blegateway',
             'running' => $bleStatus
         ]);
 
@@ -88,27 +94,9 @@ class SystemPresenter extends BasePresenter {
      * @method PUT
      */
     public function actionServiceCommand($type = 'json') {
-        $name = "";
-        switch ($this->getInput()->name) {
-            case "MiniDLNA":
-                $name = "minidlna";
-                break;
-            case "Samba":
-                $name = "smbd";
-                break;
-            case "Supervisor":
-                $name = "supervisor";
-                break;
-            case "Download":
-                $name = "Download";
-                break;
-            case "IOT Gateway":
-                $name = 'IOTGateway';
-                break;
-        }
 
-        if ($name === "Download" || $name === "IOTGateway") {
-            $result = shell_exec('sudo /usr/bin/supervisorctl ' . $this->getInput()->command . ' ' . $name);
+        if ($this->getInput()->name === "download" || $this->getInput()->name === "iotgateway" || $this->getInput()->name === "blegateway") {
+            $result = shell_exec('sudo /usr/bin/supervisorctl ' . $this->getInput()->command . ' ' . $this->getInput()->name);
             if ($this->getInput()->command === 'start') {
                 if (strpos($result, 'started') !== false) {
                     $this->resource->status = 'success';
@@ -125,7 +113,7 @@ class SystemPresenter extends BasePresenter {
                 $this->resource->status = 'failed';
             }
         } else {
-            $result = shell_exec('sudo /etc/init.d/' . $name . ' ' . $this->getInput()->command);
+            $result = shell_exec('sudo /etc/init.d/' . $this->getInput()->name . ' ' . $this->getInput()->command);
             if ($result != null) {
                 if (strpos($result, 'failed') !== false) {
                     $this->resource->status = 'failed';
