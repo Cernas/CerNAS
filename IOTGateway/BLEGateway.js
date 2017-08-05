@@ -53,17 +53,7 @@ function getTemperature(data) {
 //* ********************************** App *************************************
 logger.log('BLE Gateway: Starting application...');
 
-noble.on('stateChange', function (state) {
-    // BLE start scanning
-    if (state === 'poweredOn') {
-        noble.startScanning([], true);
-        logger.log('BLE: Start scanning');
-    } else {
-        noble.stopScanning();
-        logger.log('BLE: Stop scanning');
-    }
-});
-
+// Get all devices
 http.request({
     host: 'localhost',
     path: '/api/v1/device',
@@ -82,52 +72,67 @@ http.request({
             noble.on('discover', function (peripheral) {
                 if (haveConnect(peripheral.advertisement.localName, devices)) {
                     peripheral.connect(function (error) {
-                        if (error !== null)
+                        if (error !== null) {
                             logger.error('BLE: Peripherial connect error: ' + error + ', device: ' + peripheral.advertisement.localName);
+                        } else {
+                            logger.log('BLE: Connected to peripheral: ' + peripheral.advertisement.localName);
 
-                        logger.log('BLE: Connected to peripheral: ' + peripheral.advertisement.localName);
+                            // Stop BLE scanning
+                            noble.stopScanning();
 
-                        peripheral.discoverServices(['ffe0'], function (error, services) {
-                            if (error !== null)
-                                logger.error('BLE: Service discover error: ' + error + ', device: ' + peripheral.advertisement.localName);
-
-                            services[0].discoverCharacteristics(['ffe1'], function (error, characteristics) {
+                            peripheral.discoverServices(['ffe0'], function (error, services) {
                                 if (error !== null)
-                                    logger.error('BLE: Characteristic discover error: ' + error + ', device: ' + peripheral.advertisement.localName);
+                                    logger.error('BLE: Service discover error: ' + error + ', device: ' + peripheral.advertisement.localName);
 
-                                // Notify event listener
-                                characteristics[0].on('data', function (data) {
-                                    var mac = getMacByPeripherialId(characteristics[0]._peripheralId);
-                                    logger.log('BLE: Received message: ' + data.toString('hex') + ' from: ' + mac);
+                                services[0].discoverCharacteristics(['ffe1'], function (error, characteristics) {
+                                    if (error !== null)
+                                        logger.error('BLE: Characteristic discover error: ' + error + ', device: ' + peripheral.advertisement.localName);
 
-                                    var device = getDeviceByMac(mac, devices);
-                                    switch (device.device) {
-                                        case 'ble_thermometer_ds18b20':
-                                            var mqttMsg = JSON.stringify({
-                                                value: {
-                                                    temperature: getTemperature(data)
-                                                }
-                                            });
+                                    // Notify event listener
+                                    characteristics[0].on('data', function (data) {
+                                        var mac = getMacByPeripherialId(characteristics[0]._peripheralId);
+                                        logger.log('BLE: Received message: ' + data.toString('hex') + ' from: ' + mac);
 
-                                            var topic = device.room + '/' + device.place + '/' + device.deviceGroup + '/' + device.device + '/value';
-                                            mqttClient.publish(topic, mqttMsg, function (errorPublish) {
-                                                if (!errorPublish)
-                                                    logger.log('MQTT: Published message: ' + mqttMsg + ' to topic: ' + topic);
-                                                else
-                                                    logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + mqttMsg + ' to topic: ' + topic);
-                                            });
-                                            break;
-                                    }
+                                        var device = getDeviceByMac(mac, devices);
+                                        switch (device.device) {
+                                            case 'ble_thermometer_ds18b20':
+                                                var mqttMsg = JSON.stringify({
+                                                    value: {
+                                                        temperature: getTemperature(data)
+                                                    }
+                                                });
+
+                                                var topic = device.room + '/' + device.place + '/' + device.deviceGroup + '/' + device.device + '/value';
+                                                mqttClient.publish(topic, mqttMsg, function (errorPublish) {
+                                                    if (!errorPublish)
+                                                        logger.log('MQTT: Published message: ' + mqttMsg + ' to topic: ' + topic);
+                                                    else
+                                                        logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + mqttMsg + ' to topic: ' + topic);
+                                                });
+                                                break;
+                                        }
+                                    });
+
+                                    // Start BLE scanning
+                                    noble.startScanning([], true);
                                 });
                             });
-                        });
+                        }
 
+                        // App exit listener
                         process.on('exit', function () {
+                            // Peripherial disconnecct
                             peripheral.disconnect();
+                            // Stop BLE scanning
+                            noble.stopScanning();
                         });
                     });
                 }
             });
+
+            // Start BLE scanning...
+            noble.startScanning([], true);
+            logger.log('BLE: Start scanning');
         });
         // MQTT connection closed
         mqttClient.on('close', function (error) {

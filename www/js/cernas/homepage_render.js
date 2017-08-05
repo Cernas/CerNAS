@@ -1,6 +1,6 @@
 (function ($) {
     // Server IP address
-    const IP_ADDRESS = '192.168.0.140';
+    const IP_ADDRESS = '192.168.1.10';
     // Phone resolution limit
     const PHONE_RESOLUTION = 800;
 
