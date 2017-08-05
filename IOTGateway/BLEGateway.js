@@ -77,9 +77,6 @@ http.request({
                         } else {
                             logger.log('BLE: Connected to peripheral: ' + peripheral.advertisement.localName);
 
-                            // Stop BLE scanning
-                            noble.stopScanning();
-
                             peripheral.discoverServices(['ffe0'], function (error, services) {
                                 if (error !== null)
                                     logger.error('BLE: Service discover error: ' + error + ', device: ' + peripheral.advertisement.localName);
@@ -112,9 +109,6 @@ http.request({
                                                 break;
                                         }
                                     });
-
-                                    // Start BLE scanning
-                                    noble.startScanning([], true);
                                 });
                             });
                         }
