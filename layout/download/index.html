@@ -1,0 +1,151 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+        <title>Stahování</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap styles -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- Layout styles -->
+        <link rel="stylesheet" type="text/css" href="../css/styles.css">
+        <!-- Download layout -->
+        <link rel="stylesheet" type="text/css" href="../css/download.css">
+    </head>
+    <body>
+        <script src="../js/jquery-3.2.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+
+        <div class="container">
+            <table class="header">
+                <thead>
+                    <tr>
+                        <th><h3>Stahování</h3></th>
+                    </tr>
+                </thead>
+            </table>
+
+            <!-- Add download -->
+            <table class="table table-responsive table-single">
+                <tbody>
+                    <tr>
+                        <td style="width: 5%;">
+                            <a href="#">
+                                <div align="center"><span class="glyphicon glyphicon-plus icon-add"></span></div>
+                            </a>
+                        </td>
+                        <td style="width: 46%;">
+                            <div class="form-group">
+                                <label class="text-name" for="input-url">URL:</label>
+                                <input type="text" class="form-control input">
+                            </div>
+                        </td>
+                        <td style="width: 46%;">
+                            <div class="form-group">
+                                <label class="text-name" for="select-add">Cíl:</label>
+                                <select class="form-control input">
+                                    <option>Hudba</option>
+                                    <option>Video</option>
+                                    <option>Ostatní</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="text-info" style="width: 3%;"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Downloading -->
+            <table class="table table-responsive table-single">
+                <tbody>
+                    <tr>
+                        <td style="width: 5%;">
+                            <div align="center"><span class="glyphicon glyphicon-download-alt icon-download"></span></div>
+                        </td>
+                        <td>
+                            <div class="text-name">Harry Potter</div>
+                            <div class="text-info">Spuštěno: 8. 6. 2017 20:36</div>
+                            <div class="text-info">25 MB z 16.2 GB</div>
+                            <div class="progress">
+                                <div class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 60%">60 %</div>
+                            </div>
+                        </td>
+                        <td style="width: 1%;">
+                            <a href="#">
+                                <span class="glyphicon glyphicon-remove icon-delete"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-responsive table-multiple">
+                <tbody>
+                    <tr>
+                        <td style="width: 5%;">
+                            <div align="center"><span class="glyphicon glyphicon-time icon-waiting"></span></div>
+                        </td>
+                        <td>
+                            <div class="text-name">gitk</div>
+                            <div class="text-info">Uložit do: /Ostatní</div>
+                        </td>
+                        <td style="width: 1%;">
+                            <a href="#">
+                                <span class="glyphicon glyphicon-remove icon-delete"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 5%;">
+                            <div align="center"><span class="glyphicon glyphicon-time icon-waiting"></span></div>
+                        </td>
+                        <td>
+                            <div class="text-name">Harry Potter</div>
+                            <div class="text-info">Uložit do: /Video</div>
+                        </td>
+                        <td style="width: 1%;">
+                            <a href="#">
+                                <span class="glyphicon glyphicon-remove icon-delete"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-responsive table-multiple">
+                <tbody>
+                    <tr> 
+                        <td style="width: 5%;"> 
+                            <div align="center"><span class="glyphicon glyphicon-ok" style="color: #00FF00"></span></div>
+                        </td>
+                        <td>
+                            <div class="text-name">Harry Potter</div>
+                            <div class="text-info">Velikost: 14.8 GB - Čas: 2 h 40 min</div>
+                            <div class="text-info">Ukončeno: 31. 5. 2017 18:05</div>
+                            <div class='text-info'>Uloženo do: /Video/Stažené</div>
+                        </td>
+                        <td style="width: 1%;">
+                            <a href="#">
+                                <span class="glyphicon glyphicon-remove icon-delete"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td style="width: 5%;"> 
+                            <div align="center"><span class="glyphicon glyphicon-remove" style="color: #CC0000"></span></div>
+                        </td>
+                        <td>
+                            <div class="text-name">Harry Potter</div>
+                            <div class="text-info">Ukončeno: 31. 5. 2017 18:05</div>
+                        </td>
+                        <td style="width: 1%;">
+                            <a href="#">
+                                <span class="glyphicon glyphicon-remove icon-delete"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

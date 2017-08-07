@@ -1,0 +1,137 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+        <title>Zálohování</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- Bootstrap styles -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- Layout styles -->
+        <link rel="stylesheet" type="text/css" href="../css/styles.css">
+        <!-- Backup layout -->
+        <link rel="stylesheet" type="text/css" href="../css/backup.css">
+    </head>
+    <body>
+        <script src="../js/jquery-3.2.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+
+        <div class="container">
+            <table class="header">
+                <thead>
+                    <tr>
+                        <th><h3>Zálohování</h3></th>
+                    </tr>
+                </thead>
+            </table>
+
+            <table class="table table-responsive">
+                <thead>
+                    <tr class="text-name">
+                        <th></th>
+                        <th>Složka</th>
+                        <th>Přírůstek</th>
+                        <th>Velikost</th>
+                        <th>Spuštěno</th>
+                        <th>Vytvořeno</th>
+                        <th>Čas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-info">
+                        <td style="width: 5%;">
+                            <div align="center"><span class="glyphicon glyphicon-ok" style="color: #00FF00;"></span></div>
+                        </td>
+                        <td>Fotky</td>
+                        <td>0 B</td>
+                        <td>37,9 MB</td>
+                        <td>6. 6. 2017 8:26</td>
+                        <td>6. 6. 2017 8:31</td>
+                        <td>27 s</td>
+                    </tr>
+                    <tr class="text-info">
+                        <td style="width: 5%;">
+                            <div align="center"><span class="glyphicon glyphicon-remove" style="color: #CC0000;"></span></div>
+                        </td>
+                        <td>Stažené</td>
+                        <td>0 B</td>
+                        <td>290 MB</td>
+                        <td>6. 6. 2017 8:31</td>
+                        <td>6. 6. 2017 8:48</td>
+                        <td>10 m 6 s</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- HDD status -->
+            <table class="table table-responsive">
+                <tbody>
+                    <tr>
+                        <td style="width: 5%;">
+                            <div align="center"><span class="glyphicon glyphicon-hdd icon-hdd"></span></div>
+                        </td>
+                        <td class="text-name">Volné místo: 10 GB z 500 GB</td>
+                        <td style="width: 3%;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 5%;"></td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">Využité místo: 490 GB 90 %</div>
+                            </div>
+                            <div class="text-info" align="right"></div>
+                        </td>
+                        <td style="width: 3%;"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-responsive">
+                <thead>
+                    <tr class="text-name">
+                        <th>
+                            <div align="center"><span class="glyphicon glyphicon-folder-open icon-folder"></span></div>
+                        </th>
+                        <th>Zálohované složky</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="width: 5%;">
+                            <a href="#">
+                                <div align="center"><span class="glyphicon glyphicon-plus icon-add"></span></div>
+                            </a>
+                        </td>
+                        <td style="width: 92%;">
+                            <div class="form-group">
+                                <label class="text-name">Cesta:</label>
+                                <input type="text" class="form-control input">
+                            </div>
+                        </td>
+                        <td style="width: 3%;"></td>
+                    </tr>
+                <tbody>
+                    <tr class="text-info">
+                        <td style="width: 5%;"></td>
+                        <td>/Fotky</td>
+                        <td style="width: 5%;">
+                            <a href="#">
+                                <div align="center"><span class="glyphicon glyphicon-remove icon-delete"></span></div>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr class="text-info">
+                        <td style="width: 5%;"></td>
+                        <td>/Ostatní</td>
+                        <td style="width: 5%;">
+                            <a href="#">
+                                <div align="center"><span class="glyphicon glyphicon-remove icon-delete"></span></div>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

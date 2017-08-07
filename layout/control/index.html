@@ -1,0 +1,147 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+        <title>Stahování</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap styles -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- Layout styles -->
+        <link rel="stylesheet" type="text/css" href="../css/styles.css">
+        <!-- Download layout -->
+        <link rel="stylesheet" type="text/css" href="../css/control.css">
+    </head>
+    <body>
+        <script src="../js/jquery-3.2.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+
+        <div class="container">
+            <table class="header">
+                <thead>
+                    <tr>
+                        <th><h3>Ovládání</h3></th>
+                    </tr>
+                </thead>
+            </table>
+
+            <!-- Bedroom: room table -->
+            <table class="table table-responsive room" style="width: 29%; margin-right: 20px;">
+                <thead>
+                    <tr>
+                        <th class="room-name">
+                            <span class="glyphicon glyphicon-bed" style="margin-right: 10px;"></span>Ložnice
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <!-- Bedroom: light table -->
+                            <table class="light" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="light-name" colspan="2">
+                                            <span class="glyphicon glyphicon-lamp" style="margin-right: 10px;"></span>Osvětlení
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Bedroom: device button -->
+                                    <tr>
+                                        <td class="light-device-name" style="width: 60%;">
+                                            <div style="margin-top: 15px;">Postel</div>
+                                        </td>
+                                        <td style="width: 40%; vertical-align: bottom;">
+                                            <div align="right" style="margin-top: 20px;">
+                                                <label class="switch">
+                                                    <input id="button-bedroom-bed" type="checkbox">
+                                                    <div class="slider round"></div>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Bedroom: device detail -->
+                                    <tr id="detail-bedroom-bed" style="display: none;">
+                                        <td colspan="2">
+                                            <!-- Color picker -->
+                                            <div id="color-picker-bedroom-bed"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- Bedroom: thermometer table -->
+                            <table class="temperature" style="width: 100%; margin-top: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th class="temperature-name" colspan="2">
+                                            <span class="glyphicon glyphicon-phone" style="margin-right: 10px;"></span>Teplota
+                                        </th>
+                                        <th>
+                                            <div class="temperature-label">25 °C</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="temperature-stats" style="width: 50%;" colspan="2">
+                                            <div style="margin-top: 10px;">Min: -2 °C</div>
+                                        </td>
+                                        <td class="temperature-stats" style="width: 50%;">
+                                            <div align="right" style="margin-top: 10px;">Max: 32 °C</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Kitchen: room table -->
+            <table class="table table-responsive room" style="width: 29%; margin-right: 20px;">
+                <thead>
+                    <tr>
+                        <th class="room-name">
+                            <span class="glyphicon glyphicon-cutlery" style="margin-right: 10px;"></span>Kuchyň
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <!-- Kitchen: thermometer table -->
+                            <table class="temperature" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="temperature-name" colspan="2">
+                                            <span class="glyphicon glyphicon-phone" style="margin-right: 10px;"></span>Teplota
+                                        </th>
+                                        <th>
+                                            <div class="temperature-label">25 °C</div>
+                                            <div class="temperature-alert" style="display: none;"><span class="glyphicon glyphicon-alert" ></span></div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="temperature-stats" style="width: 50%;" colspan="2">
+                                            <div style="margin-top: 10px;">Min: -2 °C</div>
+                                        </td>
+                                        <td class="temperature-stats" style="width: 50%;">
+                                            <div align="right" style="margin-top: 10px;">Max: 32 °C</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="./iro.js-master/dist/iro.min.js"></script>
+        <script src="./socket.io-client/dist/socket.io.js"></script>
+        <script src="control.js"></script>
+    </body>
+</html>

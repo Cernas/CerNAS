@@ -1,0 +1,136 @@
+.header {
+    background-color: rgba(0,0,0, 0.3) !important;
+}
+
+.room {
+    float: left;
+    border: none;
+}
+
+.room tr th {
+    background-color: rgba(0,0,0, 0.3) !important;
+    border-color: #54c688 !important;
+}
+
+.room tr td {
+    background-color: rgba(0,0,0, 0.3) !important;
+    border-color: rgba(0,0,0, 0.0) !important;
+}
+
+.room-name {
+    color: white;
+    font-weight: bold;
+}
+
+.light tr th {
+    border: 1px solid white;
+    background-color: rgba(0,0,0, 0.0) !important;
+    height: 30px;
+    border-color: rgba(0,0,0, 0.0) !important;
+    border-bottom: 1px solid white !important;
+}
+
+.light tr td {
+    border: 1px solid white;
+    background-color: rgba(0,0,0, 0.0) !important;
+    height: 30px;
+}
+
+.light-name {
+    color: white;
+    font-weight: normal;
+}
+
+.light-device-name {
+    color: white;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 47px;
+    height: 24px;
+}
+
+.switch input {display:none;}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #54c688;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #54c688;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 32px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.temperature tr th {
+    border: 1px solid white;
+    background-color: rgba(0,0,0, 0.0) !important;
+    height: 30px;
+    border-color: rgba(0,0,0, 0.0) !important;
+    border-bottom: 1px solid white !important;
+}
+
+.temperature tr td {
+    border: 1px solid white;
+    background-color: rgba(0,0,0, 0.0) !important;
+    height: 30px;
+}
+
+.temperature-name {
+    color: white;
+    font-weight: normal;
+}
+
+.temperature-label {
+    color: #54c688;
+    font-weight: bold;
+    text-align: right;
+}
+
+.temperature-alert {
+    color: #CC0000;
+    text-align: right;
+}
+
+.temperature-stats {
+    color: white;
+}

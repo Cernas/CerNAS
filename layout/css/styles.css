@@ -1,0 +1,30 @@
+body {
+    background-image: url("../images/background.jpg");
+    background-color: #373737;
+}
+
+.header {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.header thead > tr > th > h3 {
+    color: white;
+    margin: 10px;
+}
+
+.input {
+    border-radius: 0px;
+    background-color: #333333;
+    border-color: #54c688;
+    color: #54c688;
+}
+
+.progress {
+    border-radius: 0px;   
+}
+
+.progress-bar {
+    background-color: #54c688;
+    color: white;
+}
