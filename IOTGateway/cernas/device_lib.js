@@ -1,6 +1,17 @@
 var http = require('http');
 var mqttLib = require('./mqtt_lib');
 
+function getDeviceByMessage(devices, msg) {
+    var device = null;
+    for (var i = 0; i < devices.length; i++) {
+        if (devices[i].room === msg.room && devices[i].place === msg.place && devices[i].deviceGroup === msg.deviceGroup && devices[i].device === msg.device) {
+            device = devices[i];
+            break;
+        }
+    }
+    return device;
+}
+
 function checkDevice(args) {
     http.request({
         host: 'localhost',
@@ -59,5 +70,6 @@ function checkDevice(args) {
 }
 
 module.exports = {
+    getDeviceByMessage,
     checkDevice
 };

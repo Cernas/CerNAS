@@ -13,12 +13,13 @@
                         "<div style='margin-top: 10px;'>" + lightening[i].label + "</div>" +
                         "</td>" +
                         "<td style='width: 40%; vertical-align: bottom;'>" +
-                        "<div align='right' style='margin-top: 20px;'>" +
+                        "<div id='switch-button-lightening-" + lightening[i].room + "-" + lightening[i].place + "' align='right' style='margin-top: 20px;'>" +
                         "<label class='switch'>" +
                         "<input id='button-lightening-" + lightening[i].room + "-" + lightening[i].place + "' type='checkbox' disabled>" +
                         "<div class='slider round'></div>" +
                         "</label>" +
                         "</div>" +
+                        "<div id='alert-button-lightening-" + lightening[i].room + "-" + lightening[i].place + "' class='light-alert' style='display: none;'><span class='glyphicon glyphicon-alert'></span></div>" +
                         "</td>" +
                         "</tr>";
 
@@ -48,46 +49,51 @@
     };
 
     $.fn.initLightening = function (msg, devices, setDeviceCallback) {
-        // Init HMI for wifi_controller_rgb device
-        if (msg.device === 'wifi_controller_rgb') {
-            // Init inputs listeners
-            if (msg.action !== 'error') {
-                // Register color changed listener for msg device 
-                colorPickerWatch(devices, msg, function (colorMsg) {
-                    // Send new color to device
-                    setDeviceCallback(colorMsg);
-                });
-                // Register button click listener for msg device
-                buttonClick(devices, msg, function (clickMsg) {
-                    setDeviceCallback(clickMsg);
-                });
-            }
-            // SetHMI by current device state
-            if (msg.action === 'turnOn') {
-                // Show color picker detail
-                colorPickerDetail(msg, true);
-            } else if (msg.action === 'turnOff') {
-                // Hide color picker detail
-                colorPickerDetail(msg, false);
-            } else if (msg.action === 'error') {
-                // Show error                
-                toastr.error(getNameByLocation(devices, msg), 'Chyba Wifi RGB!', {
-                    closeButton: true
-                });
-            }
+        switch (msg.device) {
+            case 'wifi_controller_rgb':
+                if (msg.action === 'error') {
+                    // Show device error
+                    showDeviceError(msg);
+                } else {
+                    // Register color changed listener for msg device 
+                    colorPickerWatch(devices, msg, function (colorMsg) {
+                        // Send new color to device
+                        setDeviceCallback(colorMsg);
+                    });
+                    // Register button click listener for msg device
+                    buttonClick(devices, msg, function (clickMsg) {
+                        setDeviceCallback(clickMsg);
+                    });
+                    // SetHMI by current device state
+                    setControllerState(msg);
+                }
+                break;
+            case 'wifi_switch_sonofftouch_relay':
+                if (msg.action === 'error') {
+                    // Show device error
+                    showDeviceError(msg);
+                } else {
+                    // Init inputs listeners
+                    buttonClick(devices, msg, function (clickMsg) {
+                        setDeviceCallback(clickMsg);
+                    });
+                    // SetHMI by current device state
+                    setSwitchState(msg);
+                }
+                break;
         }
     };
 
     $.fn.setHmiLightening = function (msg) {
-        if (msg.device === 'wifi_controller_rgb') {
-            // SetHMI by current device state
-            if (msg.action === 'turnOn') {
-                // Show color picker detail
-                colorPickerDetail(msg, true);
-            } else if (msg.action === 'turnOff') {
-                // Hide color picker detail
-                colorPickerDetail(msg, false);
-            }
+        switch (msg.device) {
+            case 'wifi_controller_rgb':
+                // SetHMI by current device state
+                setControllerState(msg);
+                break;
+            case 'wifi_switch_sonofftouch_relay':
+                // SetHMI by current device state
+                setSwitchState(msg);
+                break;
         }
     };
 
@@ -96,37 +102,61 @@
             if (lightening[i].room === msg.room && lightening[i].place === msg.place) {
                 $('#button-lightening-' + lightening[i].room + '-' + lightening[i].place).prop('disabled', false);
                 $('#button-lightening-' + lightening[i].room + '-' + lightening[i].place).click(function () {
-                    if ($(this).is(':checked')) {
-                        // Turn on
-                        buttonClickCallback({
-                            deviceGroup: 'lightening',
-                            device: lightening[i].device,
-                            room: lightening[i].room,
-                            place: lightening[i].place,
-                            action: 'turnOn',
-                            settings: {
-                                color: lightening[i].settings.defaultColor
+                    switch (lightening[i].device) {
+                        case 'wifi_controller_rgb':
+                            if ($(this).is(':checked')) {
+                                // Turn on
+                                buttonClickCallback({
+                                    deviceGroup: 'lightening',
+                                    device: lightening[i].device,
+                                    room: lightening[i].room,
+                                    place: lightening[i].place,
+                                    action: 'turnOn',
+                                    settings: {
+                                        color: lightening[i].settings.defaultColor
+                                    }
+                                });
+                                // Show color picker
+                                $('#detail-lightening-' + lightening[i].room + '-' + lightening[i].place).show('fast');
+                            } else {
+                                buttonClickCallback({
+                                    deviceGroup: 'lightening',
+                                    device: lightening[i].device,
+                                    room: lightening[i].room,
+                                    place: lightening[i].place,
+                                    action: 'turnOff',
+                                    settings: {
+                                        color: {
+                                            r: 0,
+                                            g: 0,
+                                            b: 0
+                                        }
+                                    }
+                                });
+                                // Hide color picker
+                                $('#detail-lightening-' + lightening[i].room + '-' + lightening[i].place).hide('fast');
                             }
-                        });
-                        // Show color picker
-                        $('#detail-lightening-' + lightening[i].room + '-' + lightening[i].place).show('fast');
-                    } else {
-                        buttonClickCallback({
-                            deviceGroup: 'lightening',
-                            device: lightening[i].device,
-                            room: lightening[i].room,
-                            place: lightening[i].place,
-                            action: 'turnOff',
-                            settings: {
-                                color: {
-                                    r: 0,
-                                    g: 0,
-                                    b: 0
-                                }
+                            break;
+                        case 'wifi_switch_sonofftouch_relay':
+                            if ($(this).is(':checked')) {
+                                // Turn on
+                                buttonClickCallback({
+                                    deviceGroup: 'lightening',
+                                    device: lightening[i].device,
+                                    room: lightening[i].room,
+                                    place: lightening[i].place,
+                                    action: 'turnOn'
+                                });
+                            } else {
+                                buttonClickCallback({
+                                    deviceGroup: 'lightening',
+                                    device: lightening[i].device,
+                                    room: lightening[i].room,
+                                    place: lightening[i].place,
+                                    action: 'turnOff'
+                                });
                             }
-                        });
-                        // Hide color picker
-                        $('#detail-lightening-' + lightening[i].room + '-' + lightening[i].place).hide('fast');
+                            break;
                     }
                 });
                 break;
@@ -164,22 +194,44 @@
         }
     };
 
-    var colorPickerDetail = function (msg, visible) {
-        if (visible) {
-            $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', true);
-            $('#detail-lightening-' + msg.room + '-' + msg.place).show('fast');
-        } else {
-            $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
-            $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
+    var setSwitchState = function (msg) {
+        switch (msg.action) {
+            case 'turnOn':
+                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', true);
+                break;
+            case 'turnOff':
+                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
+                break;
+            case 'connected':
+                hideDeviceError(msg);
+                break;
+            case 'error':
+                showDeviceError(msg);
+                break;
         }
     };
 
-    var getNameByLocation = function (lightening, msg) {
-        for (var i = 0; i < lightening.length; i++) {
-            if (lightening[i].room === msg.room && lightening[i].place === msg.place) {
-                return lightening[i].label;
+    var setControllerState = function (msg) {
+        switch (msg.action) {
+            case 'turnOn':
+                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', true);
+                $('#detail-lightening-' + msg.room + '-' + msg.place).show('fast');
                 break;
-            }
+            case 'turnOff':
+                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
+                $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
+                break;
         }
+    };
+
+    var showDeviceError = function (msg) {
+        $('#switch-button-lightening-' + msg.room + '-' + msg.place).hide();
+        $('#alert-button-lightening-' + msg.room + '-' + msg.place).show();
+    };
+
+    var hideDeviceError = function (msg) {
+        $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
+        $('#switch-button-lightening-' + msg.room + '-' + msg.place).show();
+        $('#alert-button-lightening-' + msg.room + '-' + msg.place).hide();
     };
 })(jQuery);

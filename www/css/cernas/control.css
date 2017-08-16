@@ -45,6 +45,11 @@
     color: white;
 }
 
+.light-alert {
+    color: #CC0000;
+    text-align: right;
+}
+
 .switch {
     position: relative;
     display: inline-block;

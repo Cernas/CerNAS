@@ -4,6 +4,7 @@ var configs = propertiesReader('./config.ini');
 var Logger = require('./cernas/logger');
 var wifiControllerRgb = require('./cernas/wifi_controller_rgb');
 var bleThermometerDS18B20 = require('./cernas/ble_thermometer_ds18b20');
+var wifiSwitchSonofftouchRelay = require('./cernas/wifi_switch_sonofftouch_relay');
 var mqtt = require('mqtt');
 var mqttLib = require('./cernas/mqtt_lib');
 var http = require('http');
@@ -81,7 +82,16 @@ http.request({
 
                 // Device connected
                 if (JSON.parse(msgMqtt).state === 'connected') {
-                    logger.log('MQTT: Connected device: ' + JSON.stringify(mqttLib.getSrcDeviceByTopic(topic, devices)));
+                    var device = mqttLib.getSrcDeviceByTopic(topic, devices);
+                    logger.log('MQTT: Connected device: ' + mqttLib.getTopicByDevice(device));
+                    // Set HMI
+                    clientsEmit('setHmi', {
+                        room: device.room,
+                        place: device.place,
+                        deviceGroup: device.deviceGroup,
+                        device: device.device,
+                        action: 'connected'
+                    });
                 }
 
                 var dstDevice = mqttLib.getDstDeviceByTopic(topic, devices);
@@ -122,6 +132,17 @@ http.request({
                                 logger.error('DEVICE: Update state error: ' + errorUpdate + ', message: ' + msgMqtt + ' to topic: ' + topic);
                             });
                             break;
+
+                        case 'wifi_switch_sonofftouch_relay':
+                            // Update state of device
+                            wifiSwitchSonofftouchRelay.updateState(srcDevice, msgMqtt, function (msgHmi) {
+                                // Init HMI
+                                clientsEmit('initHMI', msgHmi);
+                            }, function (msgHmi) {
+                                // Set HMI
+                                clientsEmit('setHMI', msgHmi);
+                            });
+                            break;
                     }
                 }
             });
@@ -146,18 +167,50 @@ http.request({
                 }, function (error) {
                     logger.error('DEVICE: Get state error: ' + error);
                 });
+                // Init wifi_switch_sonofftouch_relay devices
+                wifiSwitchSonofftouchRelay.getState(devices, logger, function (topic, msg) {
+                    mqttClient.publish(topic, msg, function (errorPublish) {
+                        if (!errorPublish)
+                            logger.log('MQTT: Published message: ' + msg + ' to topic: ' + topic);
+                        else
+                            logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msg + ' to topic: ' + topic);
+                    });
+                }, function (error) {
+                    // Set HMI error
+                    socket.emit('initHMI', error);
+                });
                 // TODO: Init any other devices
 
                 // Set device listener
                 socket.on('setDevice', function (msg) {
-                    // Set wifi_controller_rgb device
-                    if (msg.device === 'wifi_controller_rgb') {
-                        // Set wifi RGB color
-                        msg = wifiControllerRgb.setColor(devices, msg);
-                        // Set HMI
-                        if (msg !== null)
-                            clientsEmit('setHMI', msg);
+                    // Select device by msg
+                    switch (msg.device) {
+                        // Set wifi_controller_rgb device
+                        case 'wifi_controller_rgb':
+                            // Set wifi RGB color
+                            msg = wifiControllerRgb.setColor(devices, msg);
+                            // Set HMI
+                            if (msg !== null)
+                                clientsEmit('setHMI', msg);
+                            break;
+                            // Set wifi_switch_sonofftouch_relay device
+                        case 'wifi_switch_sonofftouch_relay':
+                            wifiSwitchSonofftouchRelay.setState(devices, msg, logger, function (topic, msgMqtt) {
+                                mqttClient.publish(topic, msgMqtt, function (errorPublish) {
+                                    if (!errorPublish)
+                                        logger.log('MQTT: Published message: ' + msgMqtt + ' to topic: ' + topic);
+                                    else
+                                        logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msgMqtt + ' to topic: ' + topic);
+                                });
+                            }, function (msgError) {
+                                // Set HMI
+                                clientsEmit('setHMI', msgError);
+                            });
+                            break;
                     }
+
+
+
                     // TODO: Set any other device
                 });
 

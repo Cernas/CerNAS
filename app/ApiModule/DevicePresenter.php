@@ -223,6 +223,18 @@ class DevicePresenter extends BasePresenter {
                         "lastSeen" => $device->last_seen
                     ]);
                     break;
+
+                case 'wifi_switch_sonofftouch_relay':
+                    array_push($this->resource, [
+                        "room" => $device->room,
+                        "place" => $device->place,
+                        "deviceGroup" => $device->device_group,
+                        "device" => $device->device,
+                        "connection" => [
+                            "protocol" => $device->protocol
+                        ]
+                    ]);
+                    break;
             }
         }
 

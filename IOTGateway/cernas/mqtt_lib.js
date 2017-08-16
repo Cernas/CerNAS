@@ -2,12 +2,19 @@ function getSubscribeTopicByDevice(devices) {
     var topic = [];
     for (var i = 0; i < devices.length; i++) {
         if (devices[i].connection.protocol.split(';').indexOf('MQTT') !== -1) {
-            if (devices[i].device.indexOf('controller') !== -1)
-                topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/state');
-            else if (devices[i].device.indexOf('switch') !== -1)
-                topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/action');
-            else if (devices[i].deviceGroup === 'sensor')
-                topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/value');
+            switch (devices[i].device) {
+                case 'wifi_controller_rgb':
+                    topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/state');
+                    break;
+
+                case 'ble_thermometer_ds18b20':
+                    topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/value');
+                    break;
+
+                case 'wifi_switch_sonofftouch_relay':
+                    topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/state');
+                    break;
+            }
         }
     }
     return topic;
