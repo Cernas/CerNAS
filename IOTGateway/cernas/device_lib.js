@@ -12,7 +12,7 @@ function getDeviceByMessage(devices, msg) {
     return device;
 }
 
-function checkDevice(args) {
+function check(args) {
     http.request({
         host: 'localhost',
         path: '/api/v1/device',
@@ -69,7 +69,61 @@ function checkDevice(args) {
     }).end(null);
 }
 
+function getState(arg) {
+    for (var i = 0; i < arg.devices.length; i++) {
+        if (arg.devices[i].device === arg.device) {
+            // Set init flag
+            arg.devices[i].init = true;
+            // Set socket.io socket
+            arg.devices[i].socket = arg.socket;
+            // Message to device
+            arg.msg(mqttLib.getTopicByDevice(arg.devices[i]) + '/action', JSON.stringify({
+                action: 'getState'
+            }));
+            // Start receive timeout
+            arg.devices[i].timer = setTimeout(function (device) {
+                // Receive timeout elapsed
+                arg.logger.error('Receive timeout on device: ' + mqttLib.getTopicByDevice(device));
+                // Message to HMI
+                arg.error({
+                    room: device.room,
+                    place: device.place,
+                    deviceGroup: device.deviceGroup,
+                    device: device.device,
+                    action: 'error'
+                });
+            }, 2000, arg.devices[i]);
+        }
+    }
+}
+
+function setState(arg) {
+    // Stop receive timeout
+    if (arg.device.timer._idleTimeout !== -1)
+        clearTimeout(arg.device.timer);
+
+    var msgHmi = {
+        room: arg.device.room,
+        place: arg.device.place,
+        deviceGroup: arg.device.deviceGroup,
+        device: arg.device.device,
+        action: JSON.parse(arg.msg).state
+    };
+
+    if (arg.device.init === true) {
+        // Init message to HMI
+        arg.init(msgHmi);
+    } else {
+        // Set message to HMI
+        arg.set(msgHmi);
+    }
+
+    arg.device.init = false;
+}
+
 module.exports = {
     getDeviceByMessage,
-    checkDevice
+    check,
+    getState,
+    setState
 };

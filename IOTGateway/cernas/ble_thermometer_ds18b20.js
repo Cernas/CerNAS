@@ -1,6 +1,6 @@
 var http = require('http');
 
-function getState(msgHMICallback, errorCallback) {
+function getState(msgToHmiCallback, errorCallback) {
     http.request({
         host: 'localhost',
         path: '/api/v1/device?device=ble_thermometer_ds18b20',
@@ -15,7 +15,7 @@ function getState(msgHMICallback, errorCallback) {
                         devices[i].lastMsg.value.maximum = devices[i].other.statistics.maximum;
                     }
                     // HMI message
-                    msgHMICallback({
+                    msgToHmiCallback({
                         room: devices[i].room,
                         place: devices[i].place,
                         deviceGroup: devices[i].deviceGroup,
@@ -34,7 +34,7 @@ function getState(msgHMICallback, errorCallback) {
     }).end(null);
 }
 
-function updateState(device, topic, msgMqtt, msgCallback, errorCallback) {
+function setState(device, topic, msgMqtt, msgToHmiCallback, errorCallback) {
     http.request({
         host: 'localhost',
         path: '/api/v1/device',
@@ -55,7 +55,7 @@ function updateState(device, topic, msgMqtt, msgCallback, errorCallback) {
                         msg.value.maximum = json.maximum;
                     }
                     // HMI message
-                    msgCallback({
+                    msgToHmiCallback({
                         room: device.room,
                         place: device.place,
                         deviceGroup: device.deviceGroup,
@@ -78,5 +78,5 @@ function updateState(device, topic, msgMqtt, msgCallback, errorCallback) {
 
 module.exports = {
     getState,
-    updateState
+    setState
 };

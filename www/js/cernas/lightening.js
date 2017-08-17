@@ -53,7 +53,7 @@
             case 'wifi_controller_rgb':
                 if (msg.action === 'error') {
                     // Show device error
-                    showDeviceError(msg);
+                    showDeviceOffline(msg);
                 } else {
                     // Register color changed listener for msg device 
                     colorPickerWatch(devices, msg, function (colorMsg) {
@@ -61,8 +61,8 @@
                         setDeviceCallback(colorMsg);
                     });
                     // Register button click listener for msg device
-                    buttonClick(devices, msg, function (clickMsg) {
-                        setDeviceCallback(clickMsg);
+                    buttonClick(devices, msg, function (msgClick) {
+                        setDeviceCallback(msgClick);
                     });
                     // SetHMI by current device state
                     setControllerState(msg);
@@ -71,11 +71,11 @@
             case 'wifi_switch_sonofftouch_relay':
                 if (msg.action === 'error') {
                     // Show device error
-                    showDeviceError(msg);
+                    showDeviceOffline(msg);
                 } else {
                     // Init inputs listeners
-                    buttonClick(devices, msg, function (clickMsg) {
-                        setDeviceCallback(clickMsg);
+                    buttonClick(devices, msg, function (msgClick) {
+                        setDeviceCallback(msgClick);
                     });
                     // SetHMI by current device state
                     setSwitchState(msg);
@@ -116,8 +116,6 @@
                                         color: lightening[i].settings.defaultColor
                                     }
                                 });
-                                // Show color picker
-                                $('#detail-lightening-' + lightening[i].room + '-' + lightening[i].place).show('fast');
                             } else {
                                 buttonClickCallback({
                                     deviceGroup: 'lightening',
@@ -133,8 +131,6 @@
                                         }
                                     }
                                 });
-                                // Hide color picker
-                                $('#detail-lightening-' + lightening[i].room + '-' + lightening[i].place).hide('fast');
                             }
                             break;
                         case 'wifi_switch_sonofftouch_relay':
@@ -203,10 +199,10 @@
                 $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
                 break;
             case 'connected':
-                hideDeviceError(msg);
+                showDeviceOnline(msg);
                 break;
             case 'error':
-                showDeviceError(msg);
+                showDeviceOffline(msg);
                 break;
         }
     };
@@ -221,15 +217,23 @@
                 $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
                 $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
                 break;
+            case 'connected':
+                showDeviceOnline(msg);
+                $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
+                break;
+            case 'error':
+                showDeviceOffline(msg);
+                $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
+                break;
         }
     };
 
-    var showDeviceError = function (msg) {
+    var showDeviceOffline = function (msg) {
         $('#switch-button-lightening-' + msg.room + '-' + msg.place).hide();
         $('#alert-button-lightening-' + msg.room + '-' + msg.place).show();
     };
 
-    var hideDeviceError = function (msg) {
+    var showDeviceOnline = function (msg) {
         $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
         $('#switch-button-lightening-' + msg.room + '-' + msg.place).show();
         $('#alert-button-lightening-' + msg.room + '-' + msg.place).hide();

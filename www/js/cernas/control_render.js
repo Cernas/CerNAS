@@ -1,6 +1,6 @@
 (function ($) {
 // Server ip address
-    const IP_ADDRESS = '192.168.0.131';
+    const IP_ADDRESS = '10.10.30.50';
     // Port of control app
     const PORT = 8081;
     // Phone resolution limit
@@ -35,7 +35,7 @@
                 console.log(msg);
 
                 switch (msg.deviceGroup) {
-                    case 'lightening':
+                    case 'lightening':                        
                         $().initLightening(msg, control.lightening.devices, function (msgDevice) {
                             socket.emit('setDevice', msgDevice);
                         });

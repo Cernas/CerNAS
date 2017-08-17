@@ -80,22 +80,45 @@ http.request({
             mqttClient.on('message', function (topic, msgMqtt) {
                 logger.log('MQTT: Message received: ' + msgMqtt + ' from topic: ' + topic);
 
-                // Device connected
-                if (JSON.parse(msgMqtt).state === 'connected') {
-                    var device = mqttLib.getSrcDeviceByTopic(topic, devices);
-                    logger.log('MQTT: Connected device: ' + mqttLib.getTopicByDevice(device));
-                    // Set HMI
-                    clientsEmit('setHmi', {
-                        room: device.room,
-                        place: device.place,
-                        deviceGroup: device.deviceGroup,
-                        device: device.device,
-                        action: 'connected'
-                    });
+                // To source device
+                var srcDevice = mqttLib.getSrcDeviceByTopic(topic, devices);
+                switch (srcDevice.device) {
+                    case 'wifi_controller_rgb':
+                        // Update state of device
+                        wifiControllerRgb.setState(srcDevice, msgMqtt, function (msgHmi) {
+                            // Init HMI
+                            srcDevice.socket.emit('initHMI', msgHmi);
+                        }, function (msgHmi) {
+                            // Set HMI
+                            clientsEmit('setHMI', msgHmi);
+                        });
+                        break;
+                    case 'ble_thermometer_ds18b20':
+                        // Set state of device
+                        bleThermometerDS18B20.setState(srcDevice, topic, msgMqtt, function (msgHmi) {
+                            // Set HMI
+                            clientsEmit('setHMI', msgHmi);
+                        }, function (errorUpdate) {
+                            logger.error('DEVICE: Update state error: ' + errorUpdate + ', message: ' + msgMqtt + ' to topic: ' + topic);
+                        });
+                        break;
+
+                    case 'wifi_switch_sonofftouch_relay':
+                        // Update state of device
+                        wifiSwitchSonofftouchRelay.setState(srcDevice, msgMqtt, function (msgHmi) {
+                            // Init HMI
+                            srcDevice.socket.emit('initHMI', msgHmi);
+                        }, function (msgHmi) {
+                            // Set HMI
+                            clientsEmit('setHMI', msgHmi);
+                        });
+                        break;
                 }
 
+                // Exist destination device?
                 var dstDevice = mqttLib.getDstDeviceByTopic(topic, devices);
                 if (dstDevice !== null) {
+                    // To destination device
                     switch (dstDevice.device) {
                         case 'wifi_controller_rgb':
                             wifiControllerRgb.mqttAction(dstDevice, msgMqtt, function (topic, msgDevice) {
@@ -120,55 +143,35 @@ http.request({
                             });
                             break;
                     }
-                } else {
-                    var srcDevice = mqttLib.getSrcDeviceByTopic(topic, devices);
-                    switch (srcDevice.device) {
-                        case 'ble_thermometer_ds18b20':
-                            // Update state of device
-                            bleThermometerDS18B20.updateState(srcDevice, topic, msgMqtt, function (msgHmi) {
-                                // Set HMI
-                                clientsEmit('setHMI', msgHmi);
-                            }, function (errorUpdate) {
-                                logger.error('DEVICE: Update state error: ' + errorUpdate + ', message: ' + msgMqtt + ' to topic: ' + topic);
-                            });
-                            break;
-
-                        case 'wifi_switch_sonofftouch_relay':
-                            // Update state of device
-                            wifiSwitchSonofftouchRelay.updateState(srcDevice, msgMqtt, function (msgHmi) {
-                                // Init HMI
-                                clientsEmit('initHMI', msgHmi);
-                            }, function (msgHmi) {
-                                // Set HMI
-                                clientsEmit('setHMI', msgHmi);
-                            });
-                            break;
-                    }
                 }
             });
 
-            // Socket.IO connected
+            // Socket.IO client connected
             io.on('connection', function (socket) {
                 // Client connected
                 clients.push(socket);
                 logger.log('SOCKET.IO: Client ID: ' + socket.id + ' connected, number of clients: ' + clients.length);
 
                 // Init wifi_controller_rgb devices
-                wifiControllerRgb.getState(devices, logger, function (msg) {
-                    // Set HMI state
-                    socket.emit('initHMI', msg);
+                wifiControllerRgb.getState(devices, socket, logger, function (topic, msg) {
+                    mqttClient.publish(topic, msg, function (errorPublish) {
+                        if (!errorPublish)
+                            logger.log('MQTT: Published message: ' + msg + ' to topic: ' + topic);
+                        else
+                            logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msg + ' to topic: ' + topic);
+                    });
                 }, function (error) {
                     // Set HMI error
                     socket.emit('initHMI', error);
                 });
                 // Init ble_thermometer_ds18b20 devices
                 bleThermometerDS18B20.getState(function (msg) {
-                    clientsEmit('initHMI', msg);
+                    socket.emit('initHMI', msg);
                 }, function (error) {
                     logger.error('DEVICE: Get state error: ' + error);
                 });
                 // Init wifi_switch_sonofftouch_relay devices
-                wifiSwitchSonofftouchRelay.getState(devices, logger, function (topic, msg) {
+                wifiSwitchSonofftouchRelay.getState(devices, socket, logger, function (topic, msg) {
                     mqttClient.publish(topic, msg, function (errorPublish) {
                         if (!errorPublish)
                             logger.log('MQTT: Published message: ' + msg + ' to topic: ' + topic);
@@ -188,14 +191,21 @@ http.request({
                         // Set wifi_controller_rgb device
                         case 'wifi_controller_rgb':
                             // Set wifi RGB color
-                            msg = wifiControllerRgb.setColor(devices, msg);
-                            // Set HMI
-                            if (msg !== null)
-                                clientsEmit('setHMI', msg);
+                            wifiControllerRgb.setDevice(devices, msg, logger, function (topic, msgMqtt) {
+                                mqttClient.publish(topic, msgMqtt, function (errorPublish) {
+                                    if (!errorPublish)
+                                        logger.log('MQTT: Published message: ' + msgMqtt + ' to topic: ' + topic);
+                                    else
+                                        logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msgMqtt + ' to topic: ' + topic);
+                                });
+                            }, function (msgError) {
+                                // Set HMI
+                                clientsEmit('setHMI', msgError);
+                            });
                             break;
                             // Set wifi_switch_sonofftouch_relay device
                         case 'wifi_switch_sonofftouch_relay':
-                            wifiSwitchSonofftouchRelay.setState(devices, msg, logger, function (topic, msgMqtt) {
+                            wifiSwitchSonofftouchRelay.setDevice(devices, msg, logger, function (topic, msgMqtt) {
                                 mqttClient.publish(topic, msgMqtt, function (errorPublish) {
                                     if (!errorPublish)
                                         logger.log('MQTT: Published message: ' + msgMqtt + ' to topic: ' + topic);
@@ -208,9 +218,6 @@ http.request({
                             });
                             break;
                     }
-
-
-
                     // TODO: Set any other device
                 });
 
