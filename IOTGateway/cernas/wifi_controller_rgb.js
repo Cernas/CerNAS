@@ -65,37 +65,27 @@ function setDevice(devices, msgFromHmi, logger, msgToDeviceCallback, msgErrorCal
     }
 }
 
-function mqttAction(destDevice, msgMqtt, publishCallback, stateChangedCallback) {
-    switch (JSON.parse(msgMqtt).action) {
-        case 'getState':
-            publishCallback(destDevice.room + '/' + destDevice.place + '/' + destDevice.deviceGroup + '/' + destDevice.device + '/action', msgMqtt);
-            break;
-        case 'turnOn':
-            publishCallback(destDevice.room + '/' + destDevice.place + '/' + destDevice.deviceGroup + '/' + destDevice.device + '/action', JSON.stringify({
-                action: 'setColor',
-                color: destDevice.settings.defaultColor
-            }));
-            stateChangedCallback({
-                room: destDevice.room,
-                place: destDevice.place,
-                deviceGroup: destDevice.deviceGroup,
-                device: destDevice.device,
-                action: 'turnOn'
-            });
-            break;
-        case 'turnOff':
-            publishCallback(destDevice.room + '/' + destDevice.place + '/' + destDevice.deviceGroup + '/' + destDevice.device + '/action', JSON.stringify({
-                action: 'setColor',
-                color: {r: 0, g: 0, b: 0}
-            }));
-            stateChangedCallback({
-                room: destDevice.room,
-                place: destDevice.place,
-                deviceGroup: destDevice.deviceGroup,
-                device: destDevice.device,
-                action: 'turnOff'
-            });
-            break;
+function setDestination(dstDevice, msgFromSrcDevice, logger, msgToDstDeviceCallback, msgErrorCallback) {
+    if (JSON.parse(msgFromSrcDevice).action === 'getState') {
+        // State message to destination device
+        deviceLib.getDstState({
+            device: dstDevice,
+            logger: logger,
+            msg: msgToDstDeviceCallback,
+            error: msgErrorCallback
+        });
+    } else {
+        // Action message to destination device
+        setDevice([dstDevice], {
+            room: dstDevice.room,
+            place: dstDevice.place,
+            deviceGroup: dstDevice.deviceGroup,
+            device: dstDevice.device,
+            action: JSON.parse(msgFromSrcDevice).action,
+            settings: {
+                color: dstDevice.settings.defaultColor
+            }
+        }, logger, msgToDstDeviceCallback, msgErrorCallback);
     }
 }
 
@@ -103,5 +93,5 @@ module.exports = {
     getState,
     setState,
     setDevice,
-    mqttAction
+    setDestination
 };

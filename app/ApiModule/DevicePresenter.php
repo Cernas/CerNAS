@@ -33,8 +33,10 @@ class DevicePresenter extends BasePresenter {
             ]);
         }
 
-
-        $lighteningDevices = $this->database->table("devices")->where("device_group", "lightening");
+        $lighteningDevices = $this->database->table("devices")->where("device_group", "lightening")->where("device", [
+            "wifi_controller_rgb",
+            "wifi_switch_sonofftouch_relay"
+        ]);
         $devices["lightening"]["devices"] = [];
         foreach ($lighteningDevices as $device) {
             array_push($devices["lightening"]["devices"], [
@@ -77,6 +79,84 @@ class DevicePresenter extends BasePresenter {
         }
 
         $this->resource = $devices;
+        $this->sendResource($this->typeMap[$type]);
+    }
+
+    /**
+     * @method GET
+     */
+    public function actionRead($type = 'json') {
+        $devices = null;
+        if (isset($this->getInput()->device)) {
+            $devices = $this->database->table("devices")->where([
+                "device" => $this->getInput()->device
+            ]);
+        } else {
+            $devices = $this->database->table("devices");
+        }
+
+        $this->resource = [];
+        foreach ($devices as $device) {
+            switch ($device->device) {
+                case 'wifi_controller_rgb':
+                    array_push($this->resource, [
+                        "room" => $device->room,
+                        "place" => $device->place,
+                        "deviceGroup" => $device->device_group,
+                        "device" => $device->device,
+                        "connection" => [
+                            "protocol" => $device->protocol,
+                            "ipAddress" => $device->ip_address,
+                            "port" => $device->port
+                        ],
+                        "settings" => json_decode($device->settings, true)
+                    ]);
+                    break;
+
+                case 'ble_thermometer_ds18b20':
+                    array_push($this->resource, [
+                        "room" => $device->room,
+                        "place" => $device->place,
+                        "deviceGroup" => $device->device_group,
+                        "device" => $device->device,
+                        "connection" => [
+                            "protocol" => $device->protocol,
+                            "mac" => $device->mac_address
+                        ],
+                        "lastMsg" => json_decode($device->last_msg),
+                        "other" => json_decode($device->other),
+                        "connected" => $device->connected,
+                        "sampleTimeSec" => 300,
+                        "lastSeen" => $device->last_seen
+                    ]);
+                    break;
+
+                case 'wifi_switch_sonofftouch_relay':
+                    array_push($this->resource, [
+                        "room" => $device->room,
+                        "place" => $device->place,
+                        "deviceGroup" => $device->device_group,
+                        "device" => $device->device,
+                        "connection" => [
+                            "protocol" => $device->protocol
+                        ]
+                    ]);
+                    break;
+
+                case 'wifi_switch_sonofftouch':
+                    array_push($this->resource, [
+                        "room" => $device->room,
+                        "place" => $device->place,
+                        "deviceGroup" => $device->device_group,
+                        "device" => $device->device,
+                        "connection" => [
+                            "protocol" => $device->protocol
+                        ]
+                    ]);
+                    break;
+            }
+        }
+
         $this->sendResource($this->typeMap[$type]);
     }
 
@@ -168,74 +248,6 @@ class DevicePresenter extends BasePresenter {
             $this->resource->status = "success";
         } else {
             $this->resource->status = "failed";
-        }
-
-        $this->sendResource($this->typeMap[$type]);
-    }
-
-    /**
-     * @method GET
-     */
-    public function actionRead($type = 'json') {
-        $devices = null;
-        if (isset($this->getInput()->device)) {
-            $devices = $this->database->table("devices")->where([
-                "device" => $this->getInput()->device
-            ]);
-        } else {
-            $devices = $this->database->table("devices");
-        }
-
-        $this->resource = [];
-        foreach ($devices as $device) {
-            switch ($device->device) {
-                case 'wifi_controller_rgb':
-                    array_push($this->resource, [
-                        "room" => $device->room,
-                        "place" => $device->place,
-                        "deviceGroup" => $device->device_group,
-                        "device" => $device->device,
-                        "connection" => [
-                            "protocol" => $device->protocol,
-                            "ipAddress" => $device->ip_address,
-                            "port" => $device->port
-                        ],
-                        "settings" => [
-                            json_decode($device->settings, true)
-                        ]
-                    ]);
-                    break;
-
-                case 'ble_thermometer_ds18b20':
-                    array_push($this->resource, [
-                        "room" => $device->room,
-                        "place" => $device->place,
-                        "deviceGroup" => $device->device_group,
-                        "device" => $device->device,
-                        "connection" => [
-                            "protocol" => $device->protocol,
-                            "mac" => $device->mac_address
-                        ],
-                        "lastMsg" => json_decode($device->last_msg),
-                        "other" => json_decode($device->other),
-                        "connected" => $device->connected,
-                        "sampleTimeSec" => 300,
-                        "lastSeen" => $device->last_seen
-                    ]);
-                    break;
-
-                case 'wifi_switch_sonofftouch_relay':
-                    array_push($this->resource, [
-                        "room" => $device->room,
-                        "place" => $device->place,
-                        "deviceGroup" => $device->device_group,
-                        "device" => $device->device,
-                        "connection" => [
-                            "protocol" => $device->protocol
-                        ]
-                    ]);
-                    break;
-            }
         }
 
         $this->sendResource($this->typeMap[$type]);

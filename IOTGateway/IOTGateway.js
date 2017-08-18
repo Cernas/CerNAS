@@ -60,26 +60,21 @@ http.request({
 }, function (response) {
     response.on('data', function (devices) {
         devices = JSON.parse(devices.toString());
-
         // MQTT client
         var mqttClient = mqtt.connect('mqtt://' + MQTT_BROKER_HOST);
         mqttClient.on('connect', function () {
             // MQTT client connected
             logger.log('MQTT: Client has been connected');
-
             // Start subscribing
             mqttClient.subscribe(mqttLib.getSubscribeTopicByDevice(devices), function (error, granted) {
                 for (var i = 0; i < granted.length; i++)
                     logger.log('MQTT: Subscribe started on topic: ' + granted[i].topic + ', QOS: ' + granted[i].qos);
-
                 if (error !== null)
                     logger.error('MQTT: Subscribe error: ' + error.toString());
             });
-
             // MQTT message received
             mqttClient.on('message', function (topic, msgMqtt) {
                 logger.log('MQTT: Message received: ' + msgMqtt + ' from topic: ' + topic);
-
                 // To source device
                 var srcDevice = mqttLib.getSrcDeviceByTopic(topic, devices);
                 switch (srcDevice.device) {
@@ -102,7 +97,6 @@ http.request({
                             logger.error('DEVICE: Update state error: ' + errorUpdate + ', message: ' + msgMqtt + ' to topic: ' + topic);
                         });
                         break;
-
                     case 'wifi_switch_sonofftouch_relay':
                         // Update state of device
                         wifiSwitchSonofftouchRelay.setState(srcDevice, msgMqtt, function (msgHmi) {
@@ -120,38 +114,37 @@ http.request({
                 if (dstDevice !== null) {
                     // To destination device
                     switch (dstDevice.device) {
+                        // Set wifi_controller_rgb destination device
                         case 'wifi_controller_rgb':
-                            wifiControllerRgb.mqttAction(dstDevice, msgMqtt, function (topic, msgDevice) {
-                                mqttClient.publish(topic, msgDevice, function (errorPublish) {
+                            // Set destination device
+                            wifiControllerRgb.setDestination(dstDevice, msgMqtt, logger, function (topicDst, msgDst) {
+                                mqttClient.publish(topicDst, msgDst, function (errorPublish) {
                                     if (!errorPublish)
-                                        logger.log('MQTT: Published message: ' + msgDevice + ' to topic: ' + topic);
+                                        logger.log('MQTT: Published message: ' + msgDst + ' to topic: ' + topicDst);
                                     else
-                                        logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msgDevice + ' to topic: ' + topic);
+                                        logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msgDst + ' to topic: ' + topicDst);
                                 });
-                            }, function (msgHmi) {
-                                // Set HMI
-                                clientsEmit('setHMI', msgHmi);
+                            }, function (errorDst) {
+                                clientsEmit('setHMI', errorDst);
                             });
                             break;
-                        case 'test_switch':
-                            var dstTopic = dstDevice.room + '/' + dstDevice.place + '/' + dstDevice.deviceGroup + '/' + dstDevice.device + '/state';
-                            mqttClient.publish(dstTopic, msgMqtt, function (errorPublish) {
+                        case 'wifi_switch_sonofftouch':
+                            var topicDst = mqttLib.getTopicByDevice(dstDevice) + '/state';
+                            mqttClient.publish(topicDst, msgMqtt, function (errorPublish) {
                                 if (!errorPublish)
-                                    logger.log('MQTT: Published message: ' + msgMqtt + ' to topic: ' + dstTopic);
+                                    logger.log('MQTT: Published message: ' + msgMqtt + ' to topic: ' + topicDst);
                                 else
-                                    logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msgMqtt + ' to topic: ' + dstTopic);
+                                    logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msgMqtt + ' to topic: ' + topicDst);
                             });
                             break;
                     }
                 }
             });
-
             // Socket.IO client connected
             io.on('connection', function (socket) {
                 // Client connected
                 clients.push(socket);
                 logger.log('SOCKET.IO: Client ID: ' + socket.id + ' connected, number of clients: ' + clients.length);
-
                 // Init wifi_controller_rgb devices
                 wifiControllerRgb.getState(devices, socket, logger, function (topic, msg) {
                     mqttClient.publish(topic, msg, function (errorPublish) {
@@ -220,25 +213,22 @@ http.request({
                     }
                     // TODO: Set any other device
                 });
-
                 // Client disconnected
                 socket.on('disconnect', function () {
                     clients.splice(clients.indexOf(socket), 1);
                     logger.log('SOCKET.IO: Client ID: ' + socket.id + ' disconnected, number of clients: ' + clients.length);
                 });
             });
-
             // Check sensor timer
             for (var i = 0; i < devices.length; i++) {
                 if (devices[i].sampleTimeSec) {
                     try {
-                        setInterval(deviceLib.checkDevice, devices[i].sampleTimeSec * 3 * 1000, {
+                        setInterval(deviceLib.check, devices[i].sampleTimeSec * 3 * 1000, {
                             logger: logger,
                             msgHmi: function (msgHmi) {
                                 clientsEmit('setHMI', msgHmi);
                             }
                         });
-
                         logger.log('DEVICE: Check timer has been started for device: ' + mqttLib.getTopicByDevice(devices[i]));
                     } catch (ex) {
                         logger.error('DEVICE: Check timer error: ' + ex + ', device: ' + mqttLib.getTopicByDevice(devices[i]));

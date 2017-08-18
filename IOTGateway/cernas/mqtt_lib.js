@@ -6,13 +6,14 @@ function getSubscribeTopicByDevice(devices) {
                 case 'wifi_controller_rgb':
                     topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/state');
                     break;
-
                 case 'ble_thermometer_ds18b20':
                     topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/value');
                     break;
-
                 case 'wifi_switch_sonofftouch_relay':
                     topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/state');
+                    break;
+                case 'wifi_switch_sonofftouch':
+                    topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/action');
                     break;
             }
         }

@@ -99,8 +99,10 @@ function getState(arg) {
 
 function setState(arg) {
     // Stop receive timeout
-    if (arg.device.timer._idleTimeout !== -1)
-        clearTimeout(arg.device.timer);
+    if (arg.device.timer) {
+        if (arg.device.timer._idleTimeout !== -1)
+            clearTimeout(arg.device.timer);
+    }
 
     var msgHmi = {
         room: arg.device.room,
@@ -121,9 +123,30 @@ function setState(arg) {
     arg.device.init = false;
 }
 
+function getDstState(arg) {
+    // Message to device
+    arg.msg(mqttLib.getTopicByDevice(arg.device) + '/action', JSON.stringify({
+        action: 'getState'
+    }));
+    // Start receive timeout
+    arg.device.timer = setTimeout(function (device) {
+        // Receive timeout elapsed
+        arg.logger.error('Receive timeout on device: ' + mqttLib.getTopicByDevice(device));
+        // Message to HMI
+        arg.error({
+            room: device.room,
+            place: device.place,
+            deviceGroup: device.deviceGroup,
+            device: device.device,
+            action: 'error'
+        });
+    }, 2000, arg.device);
+}
+
 module.exports = {
     getDeviceByMessage,
     check,
     getState,
-    setState
+    setState,
+    getDstState
 };
