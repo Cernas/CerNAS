@@ -51,35 +51,16 @@
     $.fn.initLightening = function (msg, devices, setDeviceCallback) {
         switch (msg.device) {
             case 'wifi_controller_rgb':
-                if (msg.action === 'error') {
-                    // Show device error
-                    showDeviceOffline(msg);
-                } else {
-                    // Register color changed listener for msg device 
-                    colorPickerWatch(devices, msg, function (colorMsg) {
-                        // Send new color to device
-                        setDeviceCallback(colorMsg);
-                    });
-                    // Register button click listener for msg device
-                    buttonClick(devices, msg, function (msgClick) {
-                        setDeviceCallback(msgClick);
-                    });
-                    // SetHMI by current device state
-                    setControllerState(msg);
-                }
+                // SetHMI by current device state
+                setControllerState(msg);
                 break;
             case 'wifi_switch_sonofftouch_relay':
-                if (msg.action === 'error') {
-                    // Show device error
-                    showDeviceOffline(msg);
-                } else {
-                    // Init inputs listeners
-                    buttonClick(devices, msg, function (msgClick) {
-                        setDeviceCallback(msgClick);
-                    });
-                    // SetHMI by current device state
-                    setSwitchState(msg);
-                }
+                // SetHMI by current device state
+                setSwitchState(msg);
+                break;
+            case 'wifi_relay_sonoff':
+                // SetHMI by current device state
+                setSwitchState(msg);
                 break;
         }
     };
@@ -94,137 +75,162 @@
                 // SetHMI by current device state
                 setSwitchState(msg);
                 break;
-        }
-    };
-
-    var buttonClick = function (lightening, msg, buttonClickCallback) {
-        for (var i = 0; i < lightening.length; i++) {
-            if (lightening[i].room === msg.room && lightening[i].place === msg.place) {
-                $('#button-lightening-' + lightening[i].room + '-' + lightening[i].place).prop('disabled', false);
-                $('#button-lightening-' + lightening[i].room + '-' + lightening[i].place).click(function () {
-                    switch (lightening[i].device) {
-                        case 'wifi_controller_rgb':
-                            if ($(this).is(':checked')) {
-                                // Turn on
-                                buttonClickCallback({
-                                    deviceGroup: 'lightening',
-                                    device: lightening[i].device,
-                                    room: lightening[i].room,
-                                    place: lightening[i].place,
-                                    action: 'turnOn',
-                                    settings: {
-                                        color: lightening[i].settings.defaultColor
-                                    }
-                                });
-                            } else {
-                                buttonClickCallback({
-                                    deviceGroup: 'lightening',
-                                    device: lightening[i].device,
-                                    room: lightening[i].room,
-                                    place: lightening[i].place,
-                                    action: 'turnOff',
-                                    settings: {
-                                        color: {
-                                            r: 0,
-                                            g: 0,
-                                            b: 0
-                                        }
-                                    }
-                                });
-                            }
-                            break;
-                        case 'wifi_switch_sonofftouch_relay':
-                            if ($(this).is(':checked')) {
-                                // Turn on
-                                buttonClickCallback({
-                                    deviceGroup: 'lightening',
-                                    device: lightening[i].device,
-                                    room: lightening[i].room,
-                                    place: lightening[i].place,
-                                    action: 'turnOn'
-                                });
-                            } else {
-                                buttonClickCallback({
-                                    deviceGroup: 'lightening',
-                                    device: lightening[i].device,
-                                    room: lightening[i].room,
-                                    place: lightening[i].place,
-                                    action: 'turnOff'
-                                });
-                            }
-                            break;
-                    }
-                });
+            case 'wifi_relay_sonoff':
+                // SetHMI by current device state
+                setSwitchState(msg);
                 break;
-            }
         }
     };
 
-    var colorPickerWatch = function (lightening, msg, colorChangedCallback) {
-        for (var i = 0; i < lightening.length; i++) {
-            if (lightening[i].room === msg.room && lightening[i].place === msg.place) {
-                var init = false;   // filter first color change
-                lightening[i].colorPicker.watch(function (color) {
-                    if (init) {
-                        var action;
-                        if (color.rgbString === 'rgb(0, 0, 0)')
-                            action = 'turnOff';
-                        else
-                            action = 'setColor';
-
-                        colorChangedCallback({
+    $.fn.buttonClick = function (device, buttonClickCallback) {
+        $('#button-lightening-' + device.room + '-' + device.place).click(function () {
+            switch (device.device) {
+                case 'wifi_controller_rgb':
+                    if ($(this).is(':checked')) {
+                        // Turn on
+                        buttonClickCallback({
                             deviceGroup: 'lightening',
-                            device: lightening[i].device,
-                            room: lightening[i].room,
-                            place: lightening[i].place,
-                            action: action,
+                            device: device.device,
+                            room: device.room,
+                            place: device.place,
+                            action: 'turnOn',
                             settings: {
-                                color: color.rgb
+                                color: device.settings.defaultColor
+                            }
+                        });
+                    } else {
+                        buttonClickCallback({
+                            deviceGroup: 'lightening',
+                            device: device.device,
+                            room: device.room,
+                            place: device.place,
+                            action: 'turnOff',
+                            settings: {
+                                color: {
+                                    r: 0,
+                                    g: 0,
+                                    b: 0
+                                }
                             }
                         });
                     }
-                    init = true;
-                });
-                break;
+                    break;
+                case 'wifi_switch_sonofftouch_relay':
+                    if ($(this).is(':checked')) {
+                        // Turn on
+                        buttonClickCallback({
+                            deviceGroup: 'lightening',
+                            device: device.device,
+                            room: device.room,
+                            place: device.place,
+                            action: 'turnOn'
+                        });
+                    } else {
+                        buttonClickCallback({
+                            deviceGroup: 'lightening',
+                            device: device.device,
+                            room: device.room,
+                            place: device.place,
+                            action: 'turnOff'
+                        });
+                    }
+                    break;
+                case 'wifi_relay_sonoff':
+                    if ($(this).is(':checked')) {
+                        // Turn on
+                        buttonClickCallback({
+                            deviceGroup: 'lightening',
+                            device: device.device,
+                            room: device.room,
+                            place: device.place,
+                            action: 'turnOn'
+                        });
+                    } else {
+                        buttonClickCallback({
+                            deviceGroup: 'lightening',
+                            device: device.device,
+                            room: device.room,
+                            place: device.place,
+                            action: 'turnOff'
+                        });
+                    }
+                    break;
             }
+        });
+    };
+
+    $.fn.colorPickerWatch = function (device, colorChangedCallback) {
+        if (device.device === 'wifi_controller_rgb') {
+            var init = false;   // filter first color change
+            device.colorPicker.watch(function (color) {
+                if (init) {
+                    var action;
+                    if (color.rgbString === 'rgb(0, 0, 0)')
+                        action = 'turnOff';
+                    else
+                        action = 'setColor';
+
+                    colorChangedCallback({
+                        deviceGroup: 'lightening',
+                        device: device.device,
+                        room: device.room,
+                        place: device.place,
+                        action: action,
+                        settings: {
+                            color: color.rgb
+                        }
+                    });
+                }
+                init = true;
+            });
         }
     };
 
     var setSwitchState = function (msg) {
-        switch (msg.action) {
-            case 'turnOn':
-                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', true);
-                break;
-            case 'turnOff':
-                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
-                break;
-            case 'connected':
-                showDeviceOnline(msg);
-                break;
-            case 'error':
-                showDeviceOffline(msg);
-                break;
+        if (msg.action === 'error') {
+            // Show device error
+            showDeviceOffline(msg);
+        } else {
+            switch (msg.action) {
+                case 'turnOn':
+                    $('#button-lightening-' + msg.room + '-' + msg.place).prop('disabled', false);
+                    $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', true);
+                    break;
+                case 'turnOff':
+                    $('#button-lightening-' + msg.room + '-' + msg.place).prop('disabled', false);
+                    $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
+                    break;
+                case 'connected':
+                    $('#button-lightening-' + msg.room + '-' + msg.place).prop('disabled', false);
+                    showDeviceOnline(msg);
+                    break;
+            }
+            // Enable button
+            $('#button-lightening-' + msg.room + '-' + msg.place).prop('disabled', false);
         }
     };
 
     var setControllerState = function (msg) {
-        switch (msg.action) {
-            case 'turnOn':
-                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', true);
-                $('#detail-lightening-' + msg.room + '-' + msg.place).show('fast');
-                break;
-            case 'turnOff':
-                $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
-                $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
-                break;
-            case 'connected':
-                showDeviceOnline(msg);
-                $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
-                break;
-            case 'error':
-                showDeviceOffline(msg);
-                $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
-                break;
+        if (msg.action === 'error') {
+            // Show device error
+            showDeviceOffline(msg);
+        } else {
+            switch (msg.action) {
+                case 'turnOn':
+                    $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', true);
+                    $('#detail-lightening-' + msg.room + '-' + msg.place).show('fast');
+                    break;
+                case 'turnOff':
+                    $('#button-lightening-' + msg.room + '-' + msg.place).prop('checked', false);
+                    $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
+                    break;
+                case 'connected':
+                    showDeviceOnline(msg);
+                    $('#detail-lightening-' + msg.room + '-' + msg.place).hide('fast');
+                    break;
+            }
+            // Enable button
+            $('#button-lightening-' + msg.room + '-' + msg.place).prop('disabled', false);
         }
     };
 

@@ -15,6 +15,9 @@ function getSubscribeTopicByDevice(devices) {
                 case 'wifi_switch_sonofftouch':
                     topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/action');
                     break;
+                case 'wifi_relay_sonoff':
+                    topic.push(devices[i].room + '/' + devices[i].place + '/' + devices[i].deviceGroup + '/' + devices[i].device + '/state');
+                    break;
             }
         }
     }

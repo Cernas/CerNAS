@@ -1,6 +1,6 @@
 (function ($) {
 // Server ip address
-    const IP_ADDRESS = '10.10.30.50';
+    const IP_ADDRESS = '192.168.1.10';
     // Port of control app
     const PORT = 8081;
     // Phone resolution limit
@@ -35,7 +35,7 @@
                 console.log(msg);
 
                 switch (msg.deviceGroup) {
-                    case 'lightening':                        
+                    case 'lightening':
                         $().initLightening(msg, control.lightening.devices, function (msgDevice) {
                             socket.emit('setDevice', msgDevice);
                         });
@@ -64,6 +64,18 @@
                         // TODO: Set HMI for any other device groups
                 }
             });
+
+            // Register listeners
+            for (var i = 0; i < control.lightening.devices.length; i++) {
+                // Button click
+                $().buttonClick(control.lightening.devices[i], function (msgClick) {
+                    socket.emit('setDevice', msgClick);
+                });
+                // Color picker color changed
+                $().colorPickerWatch(control.lightening.devices[i], function (msgColor) {
+                    socket.emit('setDevice', msgColor);
+                });
+            }
         }
     });
 })(jQuery);

@@ -5,6 +5,7 @@ var Logger = require('./cernas/logger');
 var wifiControllerRgb = require('./cernas/wifi_controller_rgb');
 var bleThermometerDS18B20 = require('./cernas/ble_thermometer_ds18b20');
 var wifiSwitchSonofftouchRelay = require('./cernas/wifi_switch_sonofftouch_relay');
+var wifiRelaySonoff = require('./cernas/wifi_relay_sonoff');
 var mqtt = require('mqtt');
 var mqttLib = require('./cernas/mqtt_lib');
 var http = require('http');
@@ -107,6 +108,16 @@ http.request({
                             clientsEmit('setHMI', msgHmi);
                         });
                         break;
+                    case 'wifi_relay_sonoff':
+                        // Update state of device
+                        wifiRelaySonoff.setState(srcDevice, msgMqtt, function (msgHmi) {
+                            // Init HMI
+                            srcDevice.socket.emit('initHMI', msgHmi);
+                        }, function (msgHmi) {
+                            // Set HMI
+                            clientsEmit('setHMI', msgHmi);
+                        });
+                        break;
                 }
 
                 // Exist destination device?
@@ -158,13 +169,25 @@ http.request({
                     socket.emit('initHMI', error);
                 });
                 // Init ble_thermometer_ds18b20 devices
-                bleThermometerDS18B20.getState(function (msg) {
-                    socket.emit('initHMI', msg);
-                }, function (error) {
-                    logger.error('DEVICE: Get state error: ' + error);
-                });
+                /*bleThermometerDS18B20.getState(function (msg) {
+                 socket.emit('initHMI', msg);
+                 }, function (error) {
+                 logger.error('DEVICE: Get state error: ' + error);
+                 });*/
                 // Init wifi_switch_sonofftouch_relay devices
                 wifiSwitchSonofftouchRelay.getState(devices, socket, logger, function (topic, msg) {
+                    mqttClient.publish(topic, msg, function (errorPublish) {
+                        if (!errorPublish)
+                            logger.log('MQTT: Published message: ' + msg + ' to topic: ' + topic);
+                        else
+                            logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msg + ' to topic: ' + topic);
+                    });
+                }, function (error) {
+                    // Set HMI error
+                    socket.emit('initHMI', error);
+                });
+                // Init wifi_relay_sonoff devices
+                wifiRelaySonoff.getState(devices, socket, logger, function (topic, msg) {
                     mqttClient.publish(topic, msg, function (errorPublish) {
                         if (!errorPublish)
                             logger.log('MQTT: Published message: ' + msg + ' to topic: ' + topic);
@@ -199,6 +222,20 @@ http.request({
                             // Set wifi_switch_sonofftouch_relay device
                         case 'wifi_switch_sonofftouch_relay':
                             wifiSwitchSonofftouchRelay.setDevice(devices, msg, logger, function (topic, msgMqtt) {
+                                mqttClient.publish(topic, msgMqtt, function (errorPublish) {
+                                    if (!errorPublish)
+                                        logger.log('MQTT: Published message: ' + msgMqtt + ' to topic: ' + topic);
+                                    else
+                                        logger.error('MQTT: Publish error: ' + errorPublish + ', message: ' + msgMqtt + ' to topic: ' + topic);
+                                });
+                            }, function (msgError) {
+                                // Set HMI
+                                clientsEmit('setHMI', msgError);
+                            });
+                            break;
+                            // Set wifi_relay_sonoff device
+                        case 'wifi_relay_sonoff':
+                            wifiRelaySonoff.setDevice(devices, msg, logger, function (topic, msgMqtt) {
                                 mqttClient.publish(topic, msgMqtt, function (errorPublish) {
                                     if (!errorPublish)
                                         logger.log('MQTT: Published message: ' + msgMqtt + ' to topic: ' + topic);

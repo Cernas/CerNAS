@@ -35,7 +35,8 @@ class DevicePresenter extends BasePresenter {
 
         $lighteningDevices = $this->database->table("devices")->where("device_group", "lightening")->where("device", [
             "wifi_controller_rgb",
-            "wifi_switch_sonofftouch_relay"
+            "wifi_switch_sonofftouch_relay",
+            "wifi_relay_sonoff"
         ]);
         $devices["lightening"]["devices"] = [];
         foreach ($lighteningDevices as $device) {
@@ -144,6 +145,18 @@ class DevicePresenter extends BasePresenter {
                     break;
 
                 case 'wifi_switch_sonofftouch':
+                    array_push($this->resource, [
+                        "room" => $device->room,
+                        "place" => $device->place,
+                        "deviceGroup" => $device->device_group,
+                        "device" => $device->device,
+                        "connection" => [
+                            "protocol" => $device->protocol
+                        ]
+                    ]);
+                    break;
+
+                case 'wifi_relay_sonoff':
                     array_push($this->resource, [
                         "room" => $device->room,
                         "place" => $device->place,
