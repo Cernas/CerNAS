@@ -2,14 +2,15 @@
 var propertiesReader = require('properties-reader');
 var configs = propertiesReader('./config.ini');
 var Logger = require('./cernas/logger');
-var wifiControllerRgb = require('./cernas/wifi_controller_rgb');
-var bleThermometerDS18B20 = require('./cernas/ble_thermometer_ds18b20');
-var wifiSwitchSonofftouchRelay = require('./cernas/wifi_switch_sonofftouch_relay');
-var wifiRelaySonoff = require('./cernas/wifi_relay_sonoff');
 var mqtt = require('mqtt');
 var mqttLib = require('./cernas/mqtt_lib');
 var http = require('http');
 var deviceLib = require('./cernas/device_lib');
+// Supported devices
+var wifiControllerRgb = require('./cernas/wifi_controller_rgb');
+var bleThermometerDS18B20 = require('./cernas/ble_thermometer_ds18b20');
+var wifiSwitchSonofftouchRelay = require('./cernas/wifi_switch_sonofftouch_relay');
+var wifiRelaySonoff = require('./cernas/wifi_relay_sonoff');
 
 //* *************************** Read config params *****************************
 const APP_PORT = parseInt(configs.get('iot_gateway.port'));   // app port
@@ -60,7 +61,7 @@ http.request({
     method: 'GET'
 }, function (response) {
     response.on('data', function (devices) {
-        devices = JSON.parse(devices.toString());
+        devices = JSON.parse(devices.toString()).devices;
         // MQTT client
         var mqttClient = mqtt.connect('mqtt://' + MQTT_BROKER_HOST);
         mqttClient.on('connect', function () {
@@ -156,6 +157,7 @@ http.request({
                 // Client connected
                 clients.push(socket);
                 logger.log('SOCKET.IO: Client ID: ' + socket.id + ' connected, number of clients: ' + clients.length);
+
                 // Init wifi_controller_rgb devices
                 wifiControllerRgb.getState(devices, socket, logger, function (topic, msg) {
                     mqttClient.publish(topic, msg, function (errorPublish) {
@@ -168,12 +170,6 @@ http.request({
                     // Set HMI error
                     socket.emit('initHMI', error);
                 });
-                // Init ble_thermometer_ds18b20 devices
-                /*bleThermometerDS18B20.getState(function (msg) {
-                 socket.emit('initHMI', msg);
-                 }, function (error) {
-                 logger.error('DEVICE: Get state error: ' + error);
-                 });*/
                 // Init wifi_switch_sonofftouch_relay devices
                 wifiSwitchSonofftouchRelay.getState(devices, socket, logger, function (topic, msg) {
                     mqttClient.publish(topic, msg, function (errorPublish) {
@@ -197,6 +193,12 @@ http.request({
                 }, function (error) {
                     // Set HMI error
                     socket.emit('initHMI', error);
+                });
+                // Init ble_thermometer_ds18b20 devices
+                bleThermometerDS18B20.getState(function (msg) {
+                    socket.emit('initHMI', msg);
+                }, function (error) {
+                    logger.error('DEVICE: Get state error: ' + error);
                 });
                 // TODO: Init any other devices
 
