@@ -121,7 +121,7 @@ class RouterFactory {
             )
                 ), IResourceRouter::GET | IResourceRouter::POST | IResourceRouter::PUT | IResourceRouter::DELETE);
 
-        $router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
+        $router[] = new Route('<presenter>/<action>[/<id>]', 'Control:default');
 
         return $router;
     }

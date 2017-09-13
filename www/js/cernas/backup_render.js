@@ -1,8 +1,14 @@
 (function ($) {
     // Server IP address
-    const IP_ADDRESS = '192.168.1.10';
+    const IP_ADDRESS = '192.168.0.131';
     // Phone resolution limit
     const PHONE_RESOLUTION = 800;
+
+    // Set desktop layout
+    if (screen.width > PHONE_RESOLUTION) {
+        document.getElementById('table-backup').style.width = '29%';
+        document.getElementById('table-directory').style.width = '69%';
+    }
 
     // List of backup directories
     var directories = [];
@@ -53,38 +59,19 @@
                 });
             }
 
-            // Set progress bar value
-            var progress = document.getElementById('progress');
-            progress.style.width = response.status.drive.percent + '%';
-            // Set progress bar text
-            var td_available = document.getElementById('td-available');
-            td_available.innerHTML = 'Volné místo: ' + response.status.drive.available + ' z ' + response.status.drive.size;
-            // Set drive info text
-            var div_info = document.getElementById('div-info');
-            if (screen.width < PHONE_RESOLUTION) {
-                if (response.status.drive.percent < 10) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.drive.used + ' ' + response.status.drive.percent + ' %';
-                } else if (response.status.drive.percent >= 10 && response.status.drive.percent < 55) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.drive.used;
-                    progress.innerHTML = response.status.drive.percent + ' %';
-                } else {
-                    progress.innerHTML = 'Využité místo: ' + response.status.drive.used + ' ' + response.status.drive.percent + ' %';
-                }
-            } else {
-                if (response.status.drive.percent < 3) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.drive.used + ' ' + response.status.drive.percent + ' %';
-                } else if (response.status.drive.percent >= 3 && response.status.drive.percent < 20) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.drive.used;
-                    progress.innerHTML = response.status.drive.percent + ' %';
-                } else {
-                    progress.innerHTML = 'Využité místo: ' + response.status.drive.used + ' ' + response.status.drive.percent + ' %';
-                }
-            }
+            // Set backup drive label
+            var div_labelDriveBackup = document.getElementById('label-drive-backup');
+            div_labelDriveBackup.innerHTML = 'Volné místo: ' + response.status.drive.available + ' z ' + response.status.drive.size;
+            // Render backup progress bar
+            $("#progress-backup").circliful({
+                percent: response.status.drive.percent,
+                text: response.status.drive.used
+            });
 
             // Copy current list of backup directories
             for (var i = 0; i < response.status.directories.length; i++)
                 directories.push(response.status.directories[i]);
-            
+
             // Refresh
             $($('#tr-directories').directories(directories)).click(directoryRemClick);
 

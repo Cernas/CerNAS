@@ -33,7 +33,7 @@
             }
 
             var trHtml =
-                    "<tr class='text-info'>" +
+                    "<tr class='backup-text'>" +
                     "<td style='width: 5%;'>" +
                     "<div align='center'><span class='glyphicon " + icon + "' style='color: " + icon_color + ";'></span></div>" +
                     "</td>" + info + "</tr>";
@@ -49,7 +49,7 @@
         for (var i = 0; i < directories.length; i++) {
             var trHtml =
                     "</tr>" +
-                    "<tr class='text-info'>" +
+                    "<tr class='backup-text'>" +
                     "<td style='width: 5%;'></td>" +
                     "<td>" + directories[i].path + "</td>" +
                     "<td style='width: 5%;'>" +

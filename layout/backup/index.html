@@ -4,7 +4,7 @@
         <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
         <title>Zálohování</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
+
         <!-- Bootstrap styles -->
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <!-- Layout styles -->
@@ -25,9 +25,9 @@
                 </thead>
             </table>
 
-            <table class="table table-responsive">
+            <table class="table table-responsive backup">
                 <thead>
-                    <tr class="text-name">
+                    <tr class="param-name">
                         <th></th>
                         <th>Složka</th>
                         <th>Přírůstek</th>
@@ -38,7 +38,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-info">
+                    <tr class="backup-text">
                         <td style="width: 5%;">
                             <div align="center"><span class="glyphicon glyphicon-ok" style="color: #00FF00;"></span></div>
                         </td>
@@ -49,7 +49,7 @@
                         <td>6. 6. 2017 8:31</td>
                         <td>27 s</td>
                     </tr>
-                    <tr class="text-info">
+                    <tr class="backup-text">
                         <td style="width: 5%;">
                             <div align="center"><span class="glyphicon glyphicon-remove" style="color: #CC0000;"></span></div>
                         </td>
@@ -63,37 +63,34 @@
                 </tbody>
             </table>
 
-            <!-- HDD status -->
-            <table class="table table-responsive">
+            <!-- Backup drive status -->
+            <table id="table-backup" class="table table-responsive backup" style="margin-right: 22px;">
+                <thead>
+                    <tr>
+                        <th class="container-name">
+                            <span class="glyphicon glyphicon-hdd" style="margin-right: 10px;"></span>Pevný disk
+                        </th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
-                        <td style="width: 5%;">
-                            <div align="center"><span class="glyphicon glyphicon-hdd icon-hdd"></span></div>
-                        </td>
-                        <td class="text-name">Volné místo: 10 GB z 500 GB</td>
-                        <td style="width: 3%;"></td>
-                    </tr>
-                    <tr>
-                        <td style="width: 5%;"></td>
                         <td>
-                            <div class="progress">
-                                <div class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">Využité místo: 490 GB 90 %</div>
+                            <div class="drive-label" align="center">Volné místo: 359 GB z 500 GB</div>
+                            <div id="progress-backup" class="progress-circle" data-animation="0" data-foregroundBorderWidth="15" data-backgroundBorderWidth="15" data-fontColor="#ffffff"
+                                 data-percentageY="95" data-percentageTextSize="16" data-textStyle="font-size: 16px;" data-textColor="#ffffff" data-backgroundColor="#cccccc" data-foregroundColor="#54c688">
                             </div>
-                            <div class="text-info" align="right"></div>
                         </td>
-                        <td style="width: 3%;"></td>
                     </tr>
                 </tbody>
             </table>
 
-            <table class="table table-responsive">
+            <!-- Directories table -->
+            <table id="table-directory" class="table table-responsive backup">
                 <thead>
-                    <tr class="text-name">
-                        <th>
-                            <div align="center"><span class="glyphicon glyphicon-folder-open icon-folder"></span></div>
+                    <tr>
+                        <th class="container-name" colspan="3">
+                            <span class="glyphicon glyphicon-folder-open icon-folder" style="margin-right: 10px;"></span>Zálohované složky
                         </th>
-                        <th>Zálohované složky</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,14 +102,14 @@
                         </td>
                         <td style="width: 92%;">
                             <div class="form-group">
-                                <label class="text-name">Cesta:</label>
+                                <label class="param-name">Cesta:</label>
                                 <input type="text" class="form-control input">
                             </div>
                         </td>
                         <td style="width: 3%;"></td>
                     </tr>
                 <tbody>
-                    <tr class="text-info">
+                    <tr class="backup-text">
                         <td style="width: 5%;"></td>
                         <td>/Fotky</td>
                         <td style="width: 5%;">
@@ -121,7 +118,7 @@
                             </a>
                         </td>
                     </tr>
-                    <tr class="text-info">
+                    <tr class="backup-text">
                         <td style="width: 5%;"></td>
                         <td>/Ostatní</td>
                         <td style="width: 5%;">
@@ -133,5 +130,8 @@
                 </tbody>
             </table>
         </div>
+
+        <script src="../js/jquery.circliful.min.js"></script>
+        <script src="backup.js"></script>
     </body>
 </html>

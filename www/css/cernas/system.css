@@ -1,0 +1,38 @@
+.system {
+    float: left;
+    border: none;
+}
+
+.system tr th {
+    background-color: rgba(0,0,0, 0.3) !important;
+    border-color: #54c688 !important;
+}
+
+.system tr td {
+    background-color: rgba(0,0,0, 0.3) !important;
+    border-color: rgba(0,0,0, 0.0) !important;
+}
+
+.container-name {
+    color: white;
+    font-weight: bold;
+}
+
+.drive-label {
+    color: white;
+    font-weight: bold;
+}
+
+.progress-circle {
+    margin-top: -50px;
+    margin-bottom: -30px;
+    position: relative;
+}
+
+.service-name {
+    color: white;
+}
+
+.icon-switch {
+    color: white;
+}

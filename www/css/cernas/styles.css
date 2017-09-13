@@ -83,6 +83,7 @@ li .icon {
 .header {
     margin-top: 20px;
     margin-bottom: 10px;
+    background-color: rgba(0,0,0, 0.3) !important;
 }
 
 .header thead > tr > th > h3 {

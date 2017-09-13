@@ -15,7 +15,7 @@
             }
 
             var trHtml =
-                    "<tr class='text-info'>" +
+                    "<tr class='service-name'>" +
                     "<td style='width: 5%;'>" +
                     "<div align='center'><span class='glyphicon " + icon + "' style='color: " + icon_color + ";'></span></div>" +
                     "</td>" +
@@ -25,7 +25,6 @@
                     "<div align='center'><span class='glyphicon glyphicon-off icon-switch'></span></div>" +
                     "</a>" +
                     "</td>" +
-                    "<td style='width: 3%;'></td>" +
                     "</tr>";
             tr_services.innerHTML += trHtml;
 

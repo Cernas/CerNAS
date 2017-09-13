@@ -1,0 +1,96 @@
+{block title}Systém{/block}
+
+{block content}
+
+<!-- Download styles -->
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/cernas/system.css">
+
+<div class="container">
+    <table class="header">
+        <thead>
+            <tr>
+                <th><h3>Systém</h3></th>
+            </tr>
+        </thead>
+    </table>
+
+    <!-- Repository status -->
+    <table id="table-repository" class="table table-responsive system" style="margin-right: 20px;">
+        <thead>
+            <tr>
+                <th class="container-name">
+                    <span class="glyphicon glyphicon-hdd" style="margin-right: 10px;"></span>Uložiště
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div id="label-drive-repository" class="drive-label" align="center"></div>
+                    <div id="progress-repository" class="progress-circle" data-animation="0" data-foregroundBorderWidth="15" data-backgroundBorderWidth="15" data-fontColor="#ffffff"
+                         data-percentageY="95" data-percentageTextSize="16" data-textStyle="font-size: 16px;" data-textColor="#ffffff" data-backgroundColor="#cccccc" data-foregroundColor="#54c688">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Backup status -->
+    <table id="table-backup" class="table table-responsive system" style="margin-right: 20px;">
+        <thead>
+            <tr>
+                <th class="container-name">
+                    <span class="glyphicon glyphicon-hdd" style="margin-right: 10px;"></span>Zálohy
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div id="label-drive-backup" class="drive-label" align="center"></div>
+                    <div id="progress-backup" class="progress-circle" data-animation="0" data-foregroundBorderWidth="15" data-backgroundBorderWidth="15" data-fontColor="#ffffff"
+                         data-percentageY="95" data-percentageTextSize="16" data-textStyle="font-size: 16px;" data-textColor="#ffffff" data-backgroundColor="#cccccc" data-foregroundColor="#54c688">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Root status -->
+    <table id="table-root" class="table table-responsive system" style="margin-right: 20px;">
+        <thead>
+            <tr>
+                <th class="container-name">
+                    <span class="glyphicon glyphicon-hdd" style="margin-right: 10px;"></span>Systém
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div id="label-drive-root" class="drive-label" align="center"></div>
+                    <div id="progress-root" class="progress-circle" data-animation="0" data-foregroundBorderWidth="15" data-backgroundBorderWidth="15" data-fontColor="#ffffff"
+                         data-percentageY="95" data-percentageTextSize="16" data-textStyle="font-size: 16px;" data-textColor="#ffffff" data-backgroundColor="#cccccc" data-foregroundColor="#54c688">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Services -->
+    <table id="table-services" class="table table-responsive system" style="margin-right: 20px;">
+        <thead>
+            <tr>
+                <th class="container-name" colspan="3">
+                    <span class="glyphicon glyphicon-wrench icon-wrench" style="margin-right: 10px;"></span>Služby
+                </th>
+            </tr>
+        </thead>
+        <tbody id="tr-services"></tbody>
+    </table>
+</div>
+
+<script src="{$basePath}/js/cernas/system.js"></script>
+<script src="{$basePath}/js/cernas/system_render.js"></script>
+
+{/block}

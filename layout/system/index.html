@@ -2,73 +2,75 @@
     <head>
         <meta charset="utf-8">
         <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
-        <title>Home</title>
+        <title>Stahování</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Bootstrap styles -->
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <!-- Layout styles -->
         <link rel="stylesheet" type="text/css" href="../css/styles.css">
-        <!-- Backup layout -->
-        <link rel="stylesheet" type="text/css" href="../css/homepage.css">
+        <!-- System layout -->
+        <link rel="stylesheet" type="text/css" href="../css/system.css">
     </head>
     <body>
         <script src="../js/jquery-3.2.1.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
 
-        <div class="container">
-            <table class="header">
+        <div class="container" style="margin-top: 50px;">
+
+            <!-- Repository status -->
+            <table id="table-repository" class="table table-responsive system" style="margin-right: 20px;">
                 <thead>
                     <tr>
-                        <th><h3>Home</h3></th>
-                    </tr>
-                </thead>
-            </table>
-
-            <!-- HDD status -->
-            <table class="table table-responsive">
-                <thead>
-                    <tr class="text-name">
-                        <th>
-                            <div align="center"><span class="glyphicon glyphicon-hdd icon-hdd"></span></div>
+                        <th class="container-name">
+                            <span class="glyphicon glyphicon-hdd" style="margin-right: 10px;"></span>Uložiště
                         </th>
-                        <th>Uložiště</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td style="width: 5%;"></td>
-                        <td class="text-name">Volné místo: 10 GB z 500 GB</td>
-                        <td style="width: 3%;"></td>
-                    </tr>
-                    <tr>
-                        <td style="width: 5%;"></td>
                         <td>
-                            <div class="progress">
-                                <div class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">Využité místo: 490 GB 60 %</div>
+                            <div class="drive-label" align="center">Volné místo: 813.77 GB z 1.2 TB</div>
+                            <div id="progress-repository" class="progress-circle" data-animation="0" data-foregroundBorderWidth="15" data-backgroundBorderWidth="15" data-fontColor="#ffffff"
+                                 data-percentageY="95" data-percentageTextSize="16" data-textStyle="font-size: 16px;" data-textColor="#ffffff" data-backgroundColor="#cccccc" data-foregroundColor="#54c688">
                             </div>
-                            <div class="text-info" align="right"></div>
                         </td>
-                        <td style="width: 3%;"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Backup status -->
+            <table id="table-backup" class="table table-responsive system" style="margin-right: 20px;">
+                <thead>
+                    <tr>
+                        <th class="container-name">
+                            <span class="glyphicon glyphicon-hdd" style="margin-right: 10px;"></span>Zálohy
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="drive-label" align="center">Volné místo: 359 GB z 500 GB</div>
+                            <div id="progress-backup" class="progress-circle" data-animation="0" data-foregroundBorderWidth="15" data-backgroundBorderWidth="15" data-fontColor="#ffffff"
+                                 data-percentageY="95" data-percentageTextSize="16" data-textStyle="font-size: 16px;" data-textColor="#ffffff" data-backgroundColor="#cccccc" data-foregroundColor="#54c688">
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- Services -->
-            <table class="table table-responsive">
+            <table id="table-services" class="table table-responsive system" style="margin-right: 20px;">
                 <thead>
-                    <tr class="text-name">
-                        <th>
-                            <div align="center"><span class="glyphicon glyphicon-wrench icon-wrench"></span></div>
+                    <tr>
+                        <th class="container-name" colspan="3">
+                            <span class="glyphicon glyphicon-wrench icon-wrench" style="margin-right: 10px;"></span>Služby
                         </th>
-                        <th>Služby</th>
-                        <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-info">
+                    <tr class="service-name">
                         <td style="width: 5%;">
                             <div align="center"><span class="glyphicon glyphicon-ok" style="color: #00FF00;"></span></div>
                         </td>
@@ -78,9 +80,8 @@
                                 <div align="center"><span class="glyphicon glyphicon-off icon-off"></span></div>
                             </a>
                         </td>
-                        <td style="width: 3%;"></td>
                     </tr>
-                    <tr class="text-info">
+                    <tr class="service-name">
                         <td style="width: 5%;">
                             <div align="center"><span class="glyphicon glyphicon-ok" style="color: #00FF00;"></span></div>
                         </td>
@@ -90,11 +91,10 @@
                                 <div align="center"><span class="glyphicon glyphicon-off icon-off"></span></div>
                             </a>
                         </td>
-                        <td style="width: 3%;"></td>
                     </tr>
-                    <tr class="text-info">
+                    <tr class="service-name">
                         <td style="width: 5%;">
-                            <div align="center"><span class="glyphicon glyphicon-ok" style="color: #CC0000;"></span></div>
+                            <div align="center"><span class="glyphicon glyphicon-remove" style="color: #CC0000;"></span></div>
                         </td>
                         <td style="width: 90%;">Supervisor</td>             
                         <td>
@@ -102,9 +102,8 @@
                                 <div align="center"><span class="glyphicon glyphicon-off icon-off"></span></div>
                             </a>
                         </td>
-                        <td style="width: 3%;"></td>
                     </tr>
-                    <tr class="text-info">
+                    <tr class="service-name">
                         <td style="width: 5%;">
                             <div align="center"><span class="glyphicon glyphicon-ok" style="color: #00FF00;"></span></div>
                         </td>
@@ -114,10 +113,12 @@
                                 <div align="center"><span class="glyphicon glyphicon-off icon-off"></span></div>
                             </a>
                         </td>
-                        <td style="width: 3%;"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
+        <script src="../js/jquery.circliful.min.js"></script>
+        <script src="system.js"></script>
     </body>
 </html>

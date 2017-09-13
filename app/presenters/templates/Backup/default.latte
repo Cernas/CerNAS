@@ -15,9 +15,10 @@
         </thead>
     </table>
 
-    <table class="table table-responsive">
+    <!-- Backups list -->
+    <table class="table table-responsive backup">
         <thead>
-            <tr class="text-name">
+            <tr class="param-name">
                 <th></th>
                 <th>Složka</th>
                 <th>Přírůstek</th>
@@ -30,37 +31,34 @@
         <tbody id="tr-backups"></tbody>
     </table>
 
-    <!-- HDD status -->
-    <table class="table table-responsive">
+    <!-- Backup drive status -->
+    <table id="table-backup" class="table table-responsive backup" style="margin-right: 22px;">
+        <thead>
+            <tr>
+                <th class="container-name">
+                    <span class="glyphicon glyphicon-hdd" style="margin-right: 10px;"></span>Pevný disk
+                </th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
-                <td style="width: 5%;">
-                    <div align="center"><span class="glyphicon glyphicon-hdd icon-hdd"></span></div>
-                </td>
-                <td id="td-available" class="text-name">Volné místo: 10 GB z 500 GB</td>
-                <td style="width: 3%;"></td>
-            </tr>
-            <tr>
-                <td style="width: 5%;"></td>
                 <td>
-                    <div class="progress">
-                        <div id="progress" class="progress-bar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                    <div id= "label-drive-backup" class="label-drive" align="center"></div>
+                    <div id="progress-backup" class="progress-circle" data-animation="0" data-foregroundBorderWidth="15" data-backgroundBorderWidth="15" data-fontColor="#ffffff"
+                         data-percentageY="95" data-percentageTextSize="16" data-textStyle="font-size: 16px;" data-textColor="#ffffff" data-backgroundColor="#cccccc" data-foregroundColor="#54c688">
                     </div>
-                    <div id="div-info" class="text-info" align="right"></div>
                 </td>
-                <td style="width: 3%;"></td>
             </tr>
         </tbody>
     </table>
 
-    <table class="table table-responsive">
+    <!-- Directories table -->
+    <table id="table-directory" class="table table-responsive backup">
         <thead>
-            <tr class="text-name">
-                <th>
-                    <div align="center"><span class="glyphicon glyphicon-folder-open icon-folder"></span></div>
+            <tr>
+                <th class="container-name" colspan="3">
+                    <span class="glyphicon glyphicon-folder-open icon-folder" style="margin-right: 10px;"></span>Zálohované složky
                 </th>
-                <th>Zálohované složky</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -72,7 +70,7 @@
                 </td>
                 <td style="width: 92%;">
                     <div class="form-group">
-                        <label class="text-name" for="input-path">Cesta:</label>
+                        <label class="param-name" for="input-path">Cesta:</label>
                         <input id="input-path" type="text" class="form-control input">
                     </div>
                 </td>

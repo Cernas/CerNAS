@@ -1,23 +1,40 @@
-table {
-    border: none !important;
+.backup {
+    float: left;
+    border: none;
 }
 
-table tr td {
+.backup tr td {
     background-color: rgba(0,0,0, 0.3) !important;
     border-color: rgba(0,0,0, 0.0) !important;
 }
 
-table tr th {
+.backup tr th {
     background-color: rgba(0,0,0, 0.3) !important;
     border-color: #54c688 !important;
 }
 
-.text-name {
+.container-name {
     color: white;
     font-weight: bold;
 }
 
-.text-info {
+.label-drive {
+    color: white;
+    font-weight: bold;
+}
+
+.progress-circle {
+    margin-top: -40px;
+    margin-bottom: -20px;
+    position: relative;
+}
+
+.param-name {
+    color: white;
+    font-weight: bold;
+}
+
+.backup-text {
     color: white;
 }
 

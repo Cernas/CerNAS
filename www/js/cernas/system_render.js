@@ -1,8 +1,16 @@
 (function ($) {
     // Server IP address
-    const IP_ADDRESS = '192.168.1.10';
+    const IP_ADDRESS = '192.168.0.131';
     // Phone resolution limit
     const PHONE_RESOLUTION = 800;
+
+    // Set desktop layout
+    if (screen.width > PHONE_RESOLUTION) {
+        document.getElementById('table-repository').style.width = '31%';
+        document.getElementById('table-backup').style.width = '31%';
+        document.getElementById('table-root').style.width = '31%';
+        document.getElementById('table-services').style.width = '31%';
+    }
 
     // List of services
     var services = [];
@@ -55,33 +63,30 @@
         url: 'http://' + IP_ADDRESS + '/api/v1/system/status',
         type: 'GET',
         success: function (response) {
-            // Set progress bar value
-            var progress = document.getElementById('progress');
-            progress.style.width = response.status.repository.percent + '%';
-            // Set progress bar text
-            var td_available = document.getElementById('td-available');
-            td_available.innerHTML = 'Volné místo: ' + response.status.repository.available + ' z ' + response.status.repository.size;
-            // Set drive info text
-            var div_info = document.getElementById('div-info');
-            if (screen.width < PHONE_RESOLUTION) {
-                if (response.status.repository.percent < 10) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.repository.used + ' ' + response.status.repository.percent + ' %';
-                } else if (response.status.repository.percent >= 10 && response.status.repository.percent < 55) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.repository.used;
-                    progress.innerHTML = response.status.repository.percent + ' %';
-                } else {
-                    progress.innerHTML = 'Využité místo: ' + response.status.repository.used + ' ' + response.status.repository.percent + ' %';
-                }
-            } else {
-                if (response.status.repository.percent < 3) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.repository.used + ' ' + response.status.repository.percent + ' %';
-                } else if (response.status.repository.percent >= 3 && response.status.repository.percent < 20) {
-                    div_info.innerHTML = 'Využité místo: ' + response.status.repository.used;
-                    progress.innerHTML = response.status.repository.percent + ' %';
-                } else {
-                    progress.innerHTML = 'Využité místo: ' + response.status.repository.used + ' ' + response.status.repository.percent + ' %';
-                }
-            }
+            // Set repository drive label
+            var div_labelDriveRepository = document.getElementById('label-drive-repository');
+            div_labelDriveRepository.innerHTML = 'Volné místo: ' + response.status.repository.available + ' z ' + response.status.repository.size;
+            // Render repository progress bar
+            $("#progress-repository").circliful({
+                percent: response.status.repository.percent,
+                text: response.status.repository.used
+            });
+            // Set backup drive label
+            var div_labelDriveBackup = document.getElementById('label-drive-backup');
+            div_labelDriveBackup.innerHTML = 'Volné místo: ' + response.status.backup.available + ' z ' + response.status.backup.size;
+            // Render backup progress bar
+            $("#progress-backup").circliful({
+                percent: response.status.backup.percent,
+                text: response.status.backup.used
+            });
+            // Set root drive label
+            var div_labelDriveRoot = document.getElementById('label-drive-root');
+            div_labelDriveRoot.innerHTML = 'Volné místo: ' + response.status.root.available + ' z ' + response.status.root.size;
+            // Render root progress bar
+            $("#progress-root").circliful({
+                percent: response.status.root.percent,
+                text: response.status.root.used
+            });
 
             // Render list of services 
             if (response.status.services.length > 0) {

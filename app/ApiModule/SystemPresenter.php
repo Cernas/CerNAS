@@ -31,6 +31,18 @@ class SystemPresenter extends BasePresenter {
         $data['repository']['available'] = $repository->available;
         $data['repository']['percent'] = $repository->percent;
 
+        $backup = $this->system->getDriveInfo('backups');
+        $data['backup']['size'] = $backup->size;
+        $data['backup']['used'] = $backup->used;
+        $data['backup']['available'] = $backup->available;
+        $data['backup']['percent'] = $backup->percent;
+
+        $root = $this->system->getDriveInfo('/');
+        $data['root']['size'] = $root->size;
+        $data['root']['used'] = $root->used;
+        $data['root']['available'] = $root->available;
+        $data['root']['percent'] = $root->percent;
+
         $data['services'] = [];
         array_push($data['services'], [
             'label' => 'MiniDLNA',
@@ -56,6 +68,12 @@ class SystemPresenter extends BasePresenter {
             'label' => 'Download',
             'name' => 'download',
             'running' => $dwnlStatus
+        ]);
+
+        array_push($data['services'], [
+            'label' => 'Mosquitto',
+            'name' => 'mosquitto',
+            'running' => $this->system->getServiceStatus('mosquitto')
         ]);
 
         $iotStatus = false;
