@@ -8,7 +8,7 @@ function getState(msgToHmiCallback, errorCallback) {
     }, function (response) {
         response.on('data', function (response) {
             try {
-                var devices = JSON.parse(response);
+                var devices = JSON.parse(response).devices;
                 for (var i = 0; i < devices.length; i++) {
                     if (devices[i].other) {
                         devices[i].lastMsg.value.minimum = devices[i].other.statistics.minimum;

@@ -1,6 +1,6 @@
 (function ($) {
 // Server ip address
-    const IP_ADDRESS = '192.168.0.131';
+    const IP_ADDRESS = '192.168.1.10';
     // Port of control app
     const PORT = 8081;
     // Phone resolution limit

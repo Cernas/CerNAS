@@ -49,7 +49,7 @@ function getTemperature(data) {
     if (((data[1] & 0xF0) >> 4) === 0x0F) {
         temperature = ((~temperature & 0x00000000000007FF) + 1) * -1;
     }
-    return parseFloat(temperature * 0.0625);
+    return parseFloat(Math.round(temperature * 0.0625 * 100) / 100);
 }
 
 //* ********************************** App *************************************
@@ -71,14 +71,14 @@ http.request({
             logger.log('MQTT: Client has been connected');
 
             // BLE discover listener
-            noble.on('discover', function (peripheral) {                
-                
+            noble.on('discover', function (peripheral) {
+
                 //console.log('Discover: ' + peripheral.advertisement.localName);     // TODO
-                
+
                 if (discovered.indexOf(peripheral.advertisement.localName) < 0) {   // Only once discover
                     // Add discovered peripherial to list
                     discovered.push(peripheral.advertisement.localName);
-                    
+
                     //console.log('Discover filter: ' + peripheral.advertisement.localName);  // TODO
 
                     if (haveConnect(peripheral.advertisement.localName, devices)) {     // Connect to peripherials on white list
