@@ -145,7 +145,7 @@
         // Update download info params
         table_downloading.style.display = null;
 
-        if (phone)
+        if (phone && data.filename.length > 35)
             td_filename.innerHTML = data.filename.substring(0, 34) + '...';
         else
             td_filename.innerHTML = data.filename;

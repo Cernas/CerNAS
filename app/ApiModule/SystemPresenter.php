@@ -86,7 +86,7 @@ class SystemPresenter extends BasePresenter {
             'running' => $iotStatus
         ]);
 
-        $bleStatus = false;
+        /*$bleStatus = false;
         if (shell_exec('ps ax | grep -v grep | grep -v grep | grep node\ /var/www/IOTGateway/BLEGateway.js')) {
             $bleStatus = true;
         }
@@ -94,7 +94,7 @@ class SystemPresenter extends BasePresenter {
             'label' => 'BLE Gateway',
             'name' => 'blegateway',
             'running' => $bleStatus
-        ]);
+        ]);*/
 
         $this->resource->status = $data;
         $this->sendResource($this->typeMap[$type]);

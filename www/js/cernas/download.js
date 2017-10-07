@@ -17,9 +17,11 @@
                 icon_color = '#CC0000';
                 info = "<div class='text-info'>Ukončeno: " + downloaded[i].finished_at + "</div>";
             }
-
-            if (phone)
-                downloaded[i].filename = downloaded[i].filename.substring(0, 34) + '...';
+            
+            if (phone) {
+                if (downloaded[i].filename.length > 35)
+                    downloaded[i].filename = downloaded[i].filename.substring(0, 34) + '...';
+            }
 
             var trHtml =
                     "<tr>" +
@@ -51,10 +53,12 @@
         tr_waiting.innerHTML = '';
         var selectors = '';
 
-        if (phone)
-            waiting[i].filename = waiting[i].filename.substring(0, 34) + '...';
-
         for (var i = 0; i < waiting.length; i++) {
+            if (phone) {
+                if (waiting[i].filename.length > 35)
+                    waiting[i].filename = waiting[i].filename.substring(0, 34) + '...';
+            }
+
             var trHtml =
                     "<tr>" +
                     "<td style='width: 5%;'>" +
